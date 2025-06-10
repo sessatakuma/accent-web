@@ -1,12 +1,15 @@
 .test {
     width: 100vw;
     height: 100vh;
-    background-color: #232323;
-    display: grid;
-    place-items: center;
+    background-color: #222;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
 }
 
-.test .wrap {
+.test .input {
     width: 32rem;
     height: 8rem;
     background-color: hsl(275, 72%, 68%);
@@ -14,22 +17,27 @@
     padding: 1rem;
 }
 
-.test form {
-    width: fit-content;
-    display: inline;
-    position: relative; /*for tools to work*/
-}
-
-.test span.marked {
-    background: #00f4;
+.test .result {
+    width: 32rem;
+    height: 24rem;
+    background-color: hsl(275, 72%, 68%);
+    color: #eee;
+    padding: 1rem;
 }
 
 .test input {
     all: unset;
     width: var(--width);
-    height: 1em;
-}
-
-.test input:focus {
-    background-color: #0002;
+    height: var(--height);
+    display: inline-block;
+    min-width: 1ch;
+    margin: 0;
+    padding: 0;
+    border: none;
+    background: none;
+    vertical-align: baseline;
+    text-align: center;
+    &:focus {
+        background-color: #0002;
+    }
 }

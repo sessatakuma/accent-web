@@ -1,80 +1,49 @@
 import React, { useEffect, useRef, useState } from 'react';
-import Tools from 'components/Tools.jsx';
-import getRect from 'utilities/getRect.jsx';
+import getRect from 'utilities/getRect.jsx'
 
-export default function EditableStr(props) {
+export default function EditableStr({ content = '', onSave }) {
     const [editing, setEditing] = useState(false);
-    const [content, setContent] = useState(props.content);
+    const [value, setValue] = useState(content);
+    const [tempValue, setTempValue] = useState(content);
     const [width, setWidth] = useState(0);
-    const [prevContent, setPrevContent] = useState('');
-    const [marked, setMarked] = useState(false);
+    const [height, setHeight] = useState(0);
+    const inputRef = useRef(null);
+    const spanRef = useRef(null);
 
-    const input = useRef(null);
-    const form = useRef(null);
-    const key = props.editKey;
-
-    useEffect(() => {
-        // fetch().then(c =>
-        //     setContent(c)
-        // );
-        setWidth(getRect(form).width);
-    }, []);
-
-    const expand = () => {
-        setWidth(getRect(form).width);
+    const startEditing = () => {
+        setWidth(getRect(spanRef).width);
+        setHeight(getRect(spanRef).height);
+        setTempValue(value);
         setEditing(true);
-        setTimeout(() => input.current.focus(), 10); 
-        // no idea why we need setTimeout
-    }
-    
-    const submit = () => {
-        edit(content).then(() => {
-            setEditing(false);
-        }).catch(err => {
-            console.error('Edit error', err);
-        });
-    }
+        setTimeout(() => inputRef.current?.focus(), 0);
+    };
 
-    const undo = () => {
+    const finishEditing = () => {
+        setValue(tempValue);
         setEditing(false);
-        setContent(prevContent);
-    }
+        onSave?.(tempValue);
+    };
 
-    const edit = c => {
-        return new Promise((resolve, reject) => {
-            resolve(_edit(c));
-        });
-    }
-    
-    const _edit = c => {
-        localStorage.setItem('edit' + key, c);
-        return c;
-    }
+    const cancelEditing = () => {
+        setTempValue(value);
+        setEditing(false);
+    };
 
-    const fetch = () => {
-        return new Promise((resolve, reject) => {
-            resolve(_fetch());
-        });
-    }
-    
-    const _fetch = () => {
-        let text = localStorage.getItem('edit' + key);
-        return text;
-    }
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter') finishEditing();
+        if (e.key === 'Escape') cancelEditing();
+    };
 
-    return <form onSubmit={submit} ref={form}>
-        {editing ? 
-            <Tools marked={marked} toggleMarked={() => setMarked(m => !m)} insert={props.insert}/> :
-            <span className={marked ? 'marked' : ''} onClick={expand}>{content}</span>}
-        <input 
-            type="text" 
-            value={content} 
-            hidden={!editing} 
-            onChange={e => setContent(e.target.value)} 
-            onFocus={() => setPrevContent(content)} 
-            onBlur={undo} 
-            ref={input}
-            style={{'--width': width + 'px'}}
-        />
-    </form>
+    return editing ? 
+        <input
+            ref={inputRef}
+            type="text"
+            value={tempValue}
+            onChange={e => setTempValue(e.target.value)}
+            onBlur={finishEditing}
+            onKeyDown={handleKeyDown}
+            style={{'--width': width + 'px', '--height': height + 'px'}}
+        /> : 
+        <span ref={spanRef} onClick={startEditing}>{value || '...'}</span>
+    ;
 }

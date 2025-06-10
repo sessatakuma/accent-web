@@ -4,32 +4,27 @@ import EditableStr from 'components/EditableStr.jsx';
 import 'components/TestPage.css';
 
 export default function TestPage(props) {
-    const text = ['Lorem ', 'ipsum ', 'dolor ', 'sit ', 'amet ', 'consectetur ', 'adipisicing ', 'elit. ', 'Sapiente ', 'voluptas ', 'inventore ', 'nesciunt ', 'molestias ', 'tempora ', 'mollitia ', 'aliquam ', 'ea ', 'cum ', 'neque ', 'a ', 'numquam ', 'aspernatu r, ', 'eaque ', 'natus ', 'veritatis ', 'ducimus ', 'veniam? ', 'Recusanda e, ', 'mollitia ', 'sunt?']
+    const [paragraph, setParagraph] = useState("今日は久しぶりに晴れて、とても気持ちのいい天気だった。");
+    const segmenter = new Intl.Segmenter('ja', { granularity: 'word' });
+    const [words, setWords] = useState([...segmenter.segment(paragraph)].map(s => {return{surface: s.segment, furigana: 'テスト'}}));
     
-    const [data, setData] = useState(
-        [...text.map((t, i) => {
-            return {text: t, editKey: i}
-        })]
-    )
-
-    let editKey = text.length;
-
-    const insert = (index, toFront) => {
-        let newData = data;
-        newData.splice(
-            index + 1 - toFront, 0,
-            {text: 'let it auto expand later ', editKey: editKey++}
-        );
-        if (data.length == newData.length)
-            alert('wtf')
-        setData(newData);
+    let updateResult = p => {
+        setParagraph(p);
+        setWords([...segmenter.segment(p)].map(s => {return{surface: s.segment, furigana: 'テスト'}}));
     }
 
     return <>
         <main className='test'>
-            <div className='wrap'>
-                {data.map((d, index) => 
-                    <EditableStr key={index} editKey={d.editKey} content={d.text} insert={toFront => {insert(index, toFront)}}/>
+            <div className='input'>
+                <EditableStr content={paragraph} onSave={updateResult}/> 
+            </div>
+
+            <div className='result'>
+                {words.map((word, index) => 
+                    <ruby key={`${index}-${word}`}>
+                        <EditableStr content={word.surface}/> 
+                        <rt><EditableStr content={word.furigana}/></rt>
+                    </ruby>
                 )}
             </div>
         </main>
