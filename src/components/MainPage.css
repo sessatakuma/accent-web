@@ -1,4 +1,4 @@
-.test {
+.main {
     width: 100vw;
     height: 100vh;
     background-color: #222;
@@ -9,7 +9,7 @@
     gap: 2rem;
 }
 
-.test .input {
+.main .input {
     width: 32rem;
     height: 8rem;
     background-color: hsl(275, 72%, 68%);
@@ -17,26 +17,28 @@
     padding: 1rem;
 }
 
-.test .result {
+.main .result {
     width: 32rem;
     height: 24rem;
     background-color: hsl(275, 72%, 68%);
     color: #eee;
     padding: 1rem;
+    user-select: none;
 }
 
-.test input {
+.main input {
     all: unset;
-    width: var(--width);
-    height: var(--height);
-    display: inline-block;
-    min-width: 1ch;
+    display: inline;
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
-    border: none;
+    border: 0;
+    width: var(--width);
+    height: var(--height);
     background: none;
-    vertical-align: baseline;
     text-align: center;
+    vertical-align: baseline;
+    cursor: pointer;
     &:focus {
         background-color: #0002;
     }

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import getRect from 'utilities/getRect.jsx'
 
-export default function EditableStr({ content = '', onSave }) {
+export default function EditableStr({ content = '', placeholder = '', onSave }) {
     const [editing, setEditing] = useState(false);
     const [value, setValue] = useState(content);
     const [tempValue, setTempValue] = useState(content);
@@ -9,7 +9,8 @@ export default function EditableStr({ content = '', onSave }) {
     const [height, setHeight] = useState(0);
     const inputRef = useRef(null);
     const spanRef = useRef(null);
-
+    const [type, setType] = useState(0);
+    const typeName = ['none', 'flat', 'drop'];
     const startEditing = () => {
         setWidth(getRect(spanRef).width);
         setHeight(getRect(spanRef).height);
@@ -32,10 +33,15 @@ export default function EditableStr({ content = '', onSave }) {
     const handleKeyDown = (e) => {
         if (e.key === 'Enter') finishEditing();
         if (e.key === 'Escape') cancelEditing();
+        if (e.key === 'ArrowUp') 
+            setType(prev => (prev + 1) % 3);
+        if (e.key === 'ArrowDown') 
+            setType(prev => (prev - 1 + 3) % 3);
     };
 
     return editing ? 
         <input
+            className={type && `accent-${typeName[type]}`}
             ref={inputRef}
             type="text"
             value={tempValue}
@@ -44,6 +50,6 @@ export default function EditableStr({ content = '', onSave }) {
             onKeyDown={handleKeyDown}
             style={{'--width': width + 'px', '--height': height + 'px'}}
         /> : 
-        <span ref={spanRef} onClick={startEditing}>{value || '...'}</span>
+        <span className={type && `accent-${typeName[type]}`} ref={spanRef} onClick={startEditing}>{value || placeholder}</span>
     ;
 }

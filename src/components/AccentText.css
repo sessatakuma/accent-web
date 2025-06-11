@@ -1,0 +1,84 @@
+/* accent options */
+:root {
+    --color: rgb(129, 190, 211);
+    --width: 2px;
+}
+
+/* frick safari */
+ruby > rt {
+    height: 1em;
+}
+
+.result p {
+    line-height: 2.5;
+    margin-bottom: 16px !important;
+}
+
+/* accent definition */
+.main [class*='accent'] {        
+    /* height matching w/ rt */
+    padding-top: .5em;
+    &:is(.main ruby > rt [class*='accent']) {
+        /* no need for rt */
+        padding-top: 0 !important; 
+    }
+    border: 
+        0
+        solid 
+        var(--color);
+    
+    border-top-width:  
+        var(--width);
+}    
+
+/* trailing drop for kana */
+.accent-drop::after {
+    /* apply invisible volume */
+    content: '';
+    display: inline-block;
+    color: transparent;
+    pointer-events: none;
+    
+    /* 
+        * match the height of rt's 
+        * and their borders 
+        */
+    height: 
+        calc(
+            .5em + 
+            2 * var(--width)
+        );
+    
+    /* match the height of its parent */
+    translate: 
+        0 
+        calc(
+            -1em - 
+            -2 * var(--width)
+        );
+    
+    border-left: 
+        solid 
+        var(--color) 
+        var(--width);
+}
+
+/* 
+    * trailing drop 
+    * for furikana 
+    */
+rt .accent-drop {
+    border-right-width: var(--width);
+    
+    &::after {
+        display: none;
+    }
+}
+
+/* 
+    * prevent trailing drop 
+    * sticking to the right 
+    */
+.accent-drop:last-child {
+    margin-right: 1px;
+}
