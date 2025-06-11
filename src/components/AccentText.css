@@ -9,7 +9,7 @@ ruby > rt {
     height: 1em;
 }
 
-.result p {
+.result {
     line-height: 2.5;
     margin-bottom: 16px !important;
 }
