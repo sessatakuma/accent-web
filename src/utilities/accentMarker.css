@@ -1,34 +1,30 @@
 /* accent options */
 :root {
-    --color: rgb(129, 190, 211);
-    --width: 2px;
+    --accent-color: rgb(129, 190, 211);
+    --accent-width: 2px;
 }
 
-/* frick safari */
+/* prevent layout disorder in safari */
 ruby > rt {
     height: 1em;
 }
 
-.result {
-    line-height: 2.5;
-    margin-bottom: 16px !important;
-}
-
 /* accent definition */
-.main [class*='accent'] {        
+[class*='accent'] {        
     /* height matching w/ rt */
-    padding-top: .5em;
+    padding-top: .5em !important;
+
+    /* no need for rt */
     &:is(.main ruby > rt [class*='accent']) {
-        /* no need for rt */
         padding-top: 0 !important; 
     }
+
     border: 
         0
         solid 
-        var(--color);
-    
+        var(--accent-color) !important;
     border-top-width:  
-        var(--width);
+        var(--accent-width) !important;
 }    
 
 /* trailing drop for kana */
@@ -39,14 +35,11 @@ ruby > rt {
     color: transparent;
     pointer-events: none;
     
-    /* 
-        * match the height of rt's 
-        * and their borders 
-        */
+    /* match the height of rt's and their borders */
     height: 
         calc(
             .5em + 
-            2 * var(--width)
+            2 * var(--accent-width)
         );
     
     /* match the height of its parent */
@@ -54,31 +47,26 @@ ruby > rt {
         0 
         calc(
             -1em - 
-            -2 * var(--width)
+            -2 * var(--accent-width)
         );
     
     border-left: 
         solid 
-        var(--color) 
-        var(--width);
+        var(--accent-color) 
+        var(--accent-width);
 }
 
-/* 
-    * trailing drop 
-    * for furikana 
-    */
+/* trailing drop for furikana */
 rt .accent-drop {
-    border-right-width: var(--width);
+    border-right-width: var(--accent-width) !important;
     
+    /* avoid redundant lines */
     &::after {
         display: none;
     }
 }
 
-/* 
-    * prevent trailing drop 
-    * sticking to the right 
-    */
+/* prevent trailing drop sticking to the right */
 .accent-drop:last-child {
     margin-right: 1px;
 }

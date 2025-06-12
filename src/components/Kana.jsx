@@ -1,7 +1,7 @@
-import React, { useEffect, useRef, useState } from 'react';
-import 'components/AccentText.css';
+import React, { useState } from 'react';
 
-export default function AccentText({text = ''}) {
+// an inline element marked w/ accent, changes type on click 
+export default function Kana({text = ''}) {
     const [type, setType] = useState(0);
     const typeName = ['none', 'flat', 'drop'];
     const changeType = () => {
@@ -9,10 +9,10 @@ export default function AccentText({text = ''}) {
     };
     
     return (
+        // receive accent class only when type is non-zero
         <span 
             className={type && `accent-${typeName[type]}`} 
             onClick={changeType} 
-            style={{cursor: 'pointer'}}
         >
             {text}
         </span>
