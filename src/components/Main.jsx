@@ -30,6 +30,30 @@ export default function MainPage(props) {
         }
     }
 
+    const copyResult = () => {
+        const isKana = str => /^[ぁ-んァ-ンー　]+$/.test(str); // 平假/片假/長音/空白
+
+        const content = words.map(word => {
+            const surface = word.surface;
+            const furigana = word.furigana;
+
+            // no kanji
+            if (isKana(surface)) {
+                return surface;
+            }
+
+            // kanji
+            return `{${surface}|${furigana}}`;
+        }).join('');
+
+        navigator.clipboard.writeText(content).then(() => {
+            alert('コピー成功！');
+        }).catch(err => {
+            console.error('コピー失敗', err);
+        });
+    };
+
+
     return <>
         <main className='main'>
             <section
@@ -70,6 +94,10 @@ export default function MainPage(props) {
                     </ruby>
                 )}
             </div>
+            
+            <button className='copy-button' onClick={copyResult}>
+                コピー
+            </button>
         </main>
     </>;
 }

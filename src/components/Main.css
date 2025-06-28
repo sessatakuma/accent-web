@@ -60,3 +60,17 @@
         background-color: #0002;
     }
 }
+.main .copy-button {
+    padding: 0.5rem 1.5rem;
+    background-color: hsl(275, 63%, 65%);
+    color: #eee;
+    font-size: 1rem;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.main .copy-button:hover {
+    background-color: hsl(275, 60%, 60%);
+}
