@@ -38,9 +38,9 @@ export default function MainPage(props) {
             const furigana = word.furigana;
 
             // no kanji
-            if (isKana(surface)) {
-                return surface;
-            }
+            //if (isKana(surface)) {
+            //    return surface;
+            //}
 
             // kanji
             return `{${surface}|${furigana}}`;
