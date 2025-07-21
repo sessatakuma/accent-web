@@ -4,6 +4,9 @@ import Kana from 'components/Kana.jsx';
 import 'components/Main.css';
 import 'utilities/accentMarker.css';
 
+
+const isKana = str => /^[ぁ-んァ-ンー。、　]+$/.test(str); // 平假/片假/長音/空白
+
 export default function MainPage(props) {
     // Using Intl.Segmenter to segment Japanese text into words
     const segmenter = new Intl.Segmenter('ja', { granularity: 'word' })
@@ -15,13 +18,57 @@ export default function MainPage(props) {
         {return{surface: s.segment, furigana: 'あ'}}
     ));
     
-    // On input change, update the paragraph and segment it into words
-    let updateResult = e => {
-        setParagraph(e.target.innerText);
-        setWords([...segmenter.segment(e.target.innerText)].map(s => {
-            return{surface: s.segment, furigana: 'あ'}}
-        ));
+    async function fetchFuriganaFromAPI(text) {
+        try {
+            const response = await fetch('https://fastapi-wd1i.onrender.com/api/MarkAccent/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ text })
+            });
+
+            const data = await response.json();
+
+            if (response.ok && data.status === 200 && Array.isArray(data.result)) {
+                return data.result.map(entry => {
+                    const surface = entry.surface;
+                    const furigana = entry.furigana;
+
+                    return {
+                        surface,
+                        furigana: isKana(surface) ? '' : furigana // just save kanji
+                    };
+                });
+            } else {
+                console.error('API format error:', data);
+                return [];
+            }
+        } catch (error) {
+            console.error('API error:', error);
+            return [];
+        }
     }
+
+    
+    
+    // On input change, update the paragraph and segment it into words
+    let updateResult = async (e) => {
+        const newText = e.target.innerText;
+        setParagraph(newText);
+
+        const result = await fetchFuriganaFromAPI(newText);
+        
+        // fallback: 如果 API 沒回傳東西，就用 segmenter 自行分詞
+        if (result.length === 0) {
+            const fallback = [...segmenter.segment(newText)].map(s => ({
+                surface: s.segment,
+                furigana: ''
+            }));
+            setWords(fallback);
+        } else {
+            setWords(result);
+        }
+    };
+
 
     let handleKeyDown = e => {
         if (e.key === 'Enter' && !e.shiftKey) {
@@ -31,16 +78,15 @@ export default function MainPage(props) {
     }
 
     const copyResult = () => {
-        const isKana = str => /^[ぁ-んァ-ンー　]+$/.test(str); // 平假/片假/長音/空白
 
         const content = words.map(word => {
             const surface = word.surface;
             const furigana = word.furigana;
 
             // no kanji
-            //if (isKana(surface)) {
-            //    return surface;
-            //}
+            if (isKana(surface)) {
+                return surface;
+            }
 
             // kanji
             return `{${surface}|${furigana}}`;
