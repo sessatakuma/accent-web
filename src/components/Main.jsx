@@ -5,18 +5,22 @@ import 'components/Main.css';
 import 'utilities/accentMarker.css';
 
 
-const isKana = str => /^[ぁ-んァ-ンー。、　]+$/.test(str); // 平假/片假/長音/空白
+const isKana = str => /^[ぁ-んァ-ンー。、.　]+$/.test(str); // 平假/片假/長音/空白
 
 export default function MainPage(props) {
     // Using Intl.Segmenter to segment Japanese text into words
     const segmenter = new Intl.Segmenter('ja', { granularity: 'word' })
 
     // Initial paragraph and words state, the placeholder text is just for testing
-    const [paragraph, setParagraph] = useState("今日は久しぶりに晴れて、とても気持ちのいい天気だった。");
+    const [paragraph, setParagraph] = useState("入力してください...");
     // The placeholder furigana is set to 'あ' for all words, this can be changed later
-    const [words, setWords] = useState([...segmenter.segment(paragraph)].map(s => 
-        {return{surface: s.segment, furigana: 'あ'}}
-    ));
+    const [words, setWords] = useState(
+    [...segmenter.segment(paragraph)].map(s => ({
+        surface: s.segment,
+        furigana: s.segment === '入力' ? 'にゅうりょく' : ''
+    }))
+    );
+
     
     async function fetchFuriganaFromAPI(text) {
         try {
