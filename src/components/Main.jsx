@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import Kana from 'components/Kana.jsx';
 import 'components/Main.css';
 import 'utilities/accentMarker.css';
+import 'utilities/colorPalette.css';
 
 export default function MainPage(props) {
     // Using Intl.Segmenter to segment Japanese text into words
@@ -55,11 +56,19 @@ export default function MainPage(props) {
 
 
     return <>
+        <header className='header'>
+            <span>せっさたくま</span>
+            <button></button>
+            <button></button>
+        </header>
         <main className='main'>
+            <section className='description'>
+                <h1>テキスト入力</h1>
+            </section>
             <section
+                className='input-area'
                 contentEditable
                 suppressContentEditableWarning
-                className='input-area'
                 onBlur={updateResult}
                 onKeyDown={handleKeyDown}
                 data-placeholder="テクスト入力..."
