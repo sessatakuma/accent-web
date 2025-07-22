@@ -2,13 +2,13 @@
     width: 100vw;
     height: 100vh;
 
-    background-color: #222;
+    background-color: var(--color-secondary);
 
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 2rem;
+    gap: 1rem;
 }
 
 .main .input-area {
@@ -19,12 +19,13 @@
     width: 32rem;
     height: 8rem;
     padding: 1rem;
+    margin-bottom: 1rem;
     
-    background-color: hsl(275, 72%, 68%);
-    color: #eee;
+    background-color: var(--color-primary);
+    color: var(--color-secondary);
     cursor: text;
     &:focus {
-        background-color: hsl(275, 63%, 65%);
+        background-color: color-mix(in hsl, var(--color-primary), #000 10%);;
     }
     &:empty::before {
       content: attr(data-placeholder);
@@ -37,8 +38,8 @@
 .main .result {
     width: 32rem;
     height: 24rem;
-    background-color: hsl(275, 72%, 68%);
-    color: #eee;
+    background-color: var(--color-primary);
+    color: var(--color-secondary);
     padding: 1rem;
     user-select: none;
     line-height: 2.5;
@@ -60,17 +61,17 @@
         background-color: #0002;
     }
 }
+
 .main .copy-button {
-    padding: 0.5rem 1.5rem;
-    background-color: hsl(275, 63%, 65%);
-    color: #eee;
-    font-size: 1rem;
+    padding: .5rem 1.5rem;
+    background-color: var(--color-primary);
+    color: var(--color-secondary);
     border: none;
-    border-radius: 0.5rem;
+    border-radius: .5rem;
     cursor: pointer;
-    transition: background-color 0.2s ease;
+    transition: background-color .2s ease;
 }
 
 .main .copy-button:hover {
-    background-color: hsl(275, 60%, 60%);
+    background-color: color-mix(in hsl, var(--color-primary), #000 10%);
 }
