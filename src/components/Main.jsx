@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 
 import Kana from 'components/Kana.jsx';
+import getRect from 'utilities/getRect.jsx';
 import 'components/Main.css';
 import 'utilities/accentMarker.css';
 import 'utilities/colorPalette.css';
@@ -10,18 +11,34 @@ export default function MainPage(props) {
     const segmenter = new Intl.Segmenter('ja', { granularity: 'word' })
 
     // Initial paragraph and words state, the placeholder text is just for testing
-    const [paragraph, setParagraph] = useState("今日は久しぶりに晴れて、とても気持ちのいい天気だった。");
+    const [paragraph, setParagraph] = useState("");
     // The placeholder furigana is set to 'あ' for all words, this can be changed later
-    const [words, setWords] = useState([...segmenter.segment(paragraph)].map(s => 
+    const [words, setWords] = useState([...segmenter.segment("")].map(s => 
         {return{surface: s.segment, furigana: 'あ'}}
     ));
-    
+    const [showCopyDescription, setShowCopyDescription] = useState(false); 
+
+    const resultRef = React.useRef(null);
+
+    const generateRandomParagraph = () => {
+        const examples = [
+            "今日は朝から猫がベランダで日向ぼっこしていたので、つい一緒にゴロゴロしてしまった。",
+            "近所のパン屋さんで新作のメロンパンを買ったら、予想以上にサクサクで感動した。",
+            "図書館で偶然見つけた本が面白すぎて、気づいたら3時間も経っていた。",
+            "雨の中を歩いていたら、傘を持っていない猫と目が合って、思わず傘を貸したくなった。"
+        ];
+        const newText = examples[Math.floor(Math.random() * examples.length)];
+        setParagraph(newText);
+    };
+
     // On input change, update the paragraph and segment it into words
     let updateResult = e => {
-        setParagraph(e.target.innerText);
-        setWords([...segmenter.segment(e.target.innerText)].map(s => {
+        setWords([...segmenter.segment(paragraph)].map(s => {
             return{surface: s.segment, furigana: 'あ'}}
         ));
+        setTimeout(() => {
+            window.scrollTo({ top: getRect(resultRef).top - getRect(resultRef).height / 16, behavior: 'smooth' });
+        }, 0);
     }
 
     let handleKeyDown = e => {
@@ -48,7 +65,10 @@ export default function MainPage(props) {
         }).join('');
 
         navigator.clipboard.writeText(content).then(() => {
-            alert('コピー成功！');
+            setShowCopyDescription(true);
+                setTimeout(() => {
+                    setShowCopyDescription(false);
+                }, 2000);
         }).catch(err => {
             console.error('コピー失敗', err);
         });
@@ -56,57 +76,79 @@ export default function MainPage(props) {
 
 
     return <>
-        <header className='header'>
-            <span>せっさたくま</span>
-            <button></button>
-            <button></button>
-        </header>
         <main className='main'>
-            <section className='description'>
-                <h1>テキスト入力</h1>
+            <header className='nav'>
+                <span className='title'>せっさたくま</span>
+                <div className='nav-buttons'>
+                    <button>中</button>
+                    <button><i class="fa-solid fa-moon"></i></button>
+                </div>
+            </header>
+            <section className='input-section'>
+                <h3 className='input-description'>アクセントをつけたい文章を入力</h3>
+                <p
+                    className='input-area'
+                    contentEditable
+                    suppressContentEditableWarning
+                    onBlur={() => {setParagraph(e.target.innerText.trim());}}
+                    onKeyDown={handleKeyDown}
+                    data-placeholder=""
+                    >
+                    {paragraph}
+                </p>
+                <button className='generate-button' onClick={generateRandomParagraph}>
+                    <i class="fa fa-dice"></i>
+                </button>
             </section>
-            <section
-                className='input-area'
-                contentEditable
-                suppressContentEditableWarning
-                onBlur={updateResult}
-                onKeyDown={handleKeyDown}
-                data-placeholder="テクスト入力..."
-            >
-                {paragraph}
-            </section>
-            <div className='result'>
-                {/* Display words according to surface and furigana */}
-                {words.map((word, index) => 
-                    <ruby key={`${index}-${word}`}>
-                        {/* Kanji -> <span>, kana -> <Kana> (accent enabled) */}
-                        {[...word.surface].map((text, textIndex) =>
-                            word.furigana ? 
-                                <span key={`${index}-${textIndex}`}>{text}</span> :
-                                <Kana key={`${index}-${textIndex}`} text={text}/>
-                        )}
-                        {/* If there is furigana, display it in rt and make it editable */}
-                        <rt>
-                            {word.furigana && 
-                                <Kana
-                                    editable
-                                    text={word.furigana} 
-                                    onUpdate={
-                                        newFurigana => {
-                                            let newWords = [...words];
-                                            newWords[index].furigana = newFurigana;
-                                            setWords(newWords);
+            <button className='run-button' onClick={updateResult}>
+                <i class="fa-solid fa-arrow-down"></i>
+                </button>
+            <section className='result-section' ref={resultRef}>
+                <h3 className='result-description'>クリックしてアクセントを編集</h3>
+                <p className='result-area'>
+                    {/* Display words according to surface and furigana */}
+                    {words.map((word, index) => 
+                        <ruby key={`${index}-${word}`}>
+                            {/* Kanji -> <span>, kana -> <Kana> (accent enabled) */}
+                            {[...word.surface].map((text, textIndex) =>
+                                word.furigana ? 
+                                    <span key={`${index}-${textIndex}`}>{text}</span> :
+                                    <Kana key={`${index}-${textIndex}`} text={text}/>
+                            )}
+                            {/* If there is furigana, display it in rt and make it editable */}
+                            <rt>
+                                {word.furigana && 
+                                    <Kana
+                                        editable
+                                        text={word.furigana} 
+                                        onUpdate={
+                                            newFurigana => {
+                                                let newWords = [...words];
+                                                newWords[index].furigana = newFurigana;
+                                                setWords(newWords);
+                                            }
                                         }
-                                    }
-                                />}
-                        </rt>
-                    </ruby>
-                )}
-            </div>
-            
-            <button className='copy-button' onClick={copyResult}>
-                コピー
-            </button>
+                                    />}
+                            </rt>
+                        </ruby>
+                    )}
+                </p>
+                <div className='result-buttons'>
+                    <button className='copy-button' onClick={copyResult}>
+                        <i className="fa-solid fa-copy"></i>
+                    </button>
+                    <span className='copy-description' style={{opacity: +showCopyDescription}}>コピーしました！</span>
+                    <i className="fa-solid fa-download download"></i>
+                    <div className='share-buttons'>
+                        <button className='image-button'>
+                            <i className="fa-solid fa-image"></i>
+                        </button>
+                        <button className='pdf-button'>
+                            <i className="fa-solid fa-file-pdf"></i>
+                        </button>
+                    </div>
+                </div>
+            </section>
         </main>
     </>;
 }
