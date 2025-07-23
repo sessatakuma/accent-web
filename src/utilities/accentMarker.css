@@ -1,6 +1,6 @@
 /* accent options */
 :root {
-    --accent-color: rgb(129, 190, 211);
+    --accent-color: var(--color-accent);
     --accent-width: 2px;
 }
 

@@ -1,14 +1,65 @@
 .main {
     width: 100vw;
-    height: 100vh;
+    height: 200vh;
 
-    background-color: #222;
+    background-color: var(--color-secondary);
 
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
-    gap: 2rem;
+    gap: 1rem;
+}
+
+.main .nav {
+    width: 100%;
+    padding: 0 4rem;
+    height: 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: var(--color-primary);
+    color: var(--color-secondary);
+
+    & .title {
+        font-weight: 800;
+        font-size: 1.6rem;
+    }
+}
+
+.main .nav-buttons {
+    display: flex;
+    gap: 1rem;
+
+    & button {
+        background-color: var(--color-secondary);
+        color: var(--color-primary);
+        border: none;
+        width: 2rem;
+        height: 2rem;
+        display: grid;
+        place-items: center;
+        border-radius: 50%;
+        cursor: pointer;
+        transition: background-color .2s ease;
+
+        &:hover {
+            background-color: color-mix(in hsl, var(--color-secondary), #000 5%);
+        }
+    }
+}
+
+.main .input-description {
+    margin-top: 2rem;
+    text-align: center;
+    color: var(--color-primary);
+}
+
+.main .input-section {
+    position: relative;
+    width: 32rem;
+    height: 44.5rem;
+    display: grid;
+    place-items: center;
 }
 
 .main .input-area {
@@ -16,17 +67,19 @@
     display: block;
     box-sizing: border-box;
 
+    position: relative;
     width: 32rem;
-    height: 8rem;
+    height: 40rem;
     padding: 1rem;
+    margin-bottom: 1rem;
     
-    background-color: hsl(275, 72%, 68%);
-    color: #eee;
+    background-color: var(--color-primary);
+    color: var(--color-secondary);
     cursor: text;
     &:focus {
-        background-color: hsl(275, 63%, 65%);
+        background-color: color-mix(in hsl, var(--color-primary), #000 5%);;
     }
-    &:empty::before {
+    &:empty:not(:focus)::before {
       content: attr(data-placeholder);
       pointer-events: none;
       display: block;
@@ -34,17 +87,61 @@
     }
 }
 
-.main .result {
+.main .generate-button {
+    width: 4rem;
+    height: 4rem;
+    background-color: #0000;
+    color: var(--color-secondary);
+    cursor: pointer;
+    border-radius: .5rem;;
+    transition: background-color .2s ease;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    font-size: 1.6rem;
+}
+
+.main .run-button {
+    width: 6rem;
+    height: 6rem;
+    margin: 2rem 0;
+    background-color: var(--color-accent);
+    color: var(--color-primary);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all .2s ease;
+    &:hover {
+        font-size: 2rem;
+        background-color: color-mix(in hsl, var(--color-accent), #000 5%);
+    }
+}
+
+.main .result-section {
+    position: relative;
     width: 32rem;
-    height: 24rem;
-    background-color: hsl(275, 72%, 68%);
-    color: #eee;
+    height: 48rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.main .result-description {
+    text-align: center;
+    color: var(--color-primary);
+}
+
+.main .result-area {
+    width: 32rem;
+    height: 40rem;
+    background-color: var(--color-primary);
+    color: var(--color-secondary);
     padding: 1rem;
     user-select: none;
     line-height: 2.5;
+    resize: both;
 }
 
-.main .result .furigana {
+.main .result-area .furigana {
     all: unset;
     display: inline;
 
@@ -60,17 +157,60 @@
         background-color: #0002;
     }
 }
-.main .copy-button {
-    padding: 0.5rem 1.5rem;
-    background-color: hsl(275, 63%, 65%);
-    color: #eee;
-    font-size: 1rem;
-    border: none;
-    border-radius: 0.5rem;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
+
+.main .result-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding-right: .5rem;
 }
 
-.main .copy-button:hover {
-    background-color: hsl(275, 60%, 60%);
+.main .result-buttons button {
+    width: 4rem;
+    height: 2rem;
+    background-color: var(--color-accent);
+    color: var(--color-primary);
+    border: none;
+    border-radius: .5rem;
+    cursor: pointer;
+    transition: background-color .2s ease;
+
+    &:hover {
+        background-color: color-mix(in hsl, var(--color-accent), #000 5%);
+    }
+
+    &.copy-button {
+        height: 3rem;;
+    }
+}
+
+.main .share-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--color-primary);
+    gap: 1rem;
+    outline: var(--color-primary) solid .1rem;
+    outline-offset: .5rem;
+    border-radius: .5rem;
+}
+
+.main .download {
+    color: var(--color-primary);
+    height: 2rem;
+    position: absolute;
+    right: 11rem;
+    display: flex;
+    align-items: center;
+}
+
+.main .copy-description {
+    color: var(--color-primary);
+    left: 5rem;
+    position: absolute;
+    background-color: #fff5;
+    padding: .5rem 1.5rem;
+    transition: opacity .1s;
 }
