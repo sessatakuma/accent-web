@@ -1,23 +1,22 @@
 import React, { useState } from 'react';
 
 // an inline element marked w/ accent, changes type on click 
-export default function Kana({ text, onUpdate, editable = false}) {
-    const [type, setType] = useState(0);
+export default function Kana({ text, accent, onUpdate, editable = false}) {
     // if editable, set firstClick to true
-    // this is to block the first click from changing the type
+    // this is to block the first click from changing the accent type
     const [firstClick, setFirstClick] = useState(editable);
-    const typeName = ['none', 'flat', 'drop'];
+    const accentName = ['none', 'flat', 'drop'];
     
     const changeType = () => {
         // if it's the first click that will start an edit, don't change type
-        setType(prev => (prev + 1 - firstClick) % 3);
+        onUpdate?.(text, (accent + 1 - firstClick) % 3);
         // it isn't the first click anymore till finish editing
         setFirstClick(false);
     };
 
     let finishEditing = e => {
         if (!editable) return;
-        onUpdate?.(e.target.innerText)
+        onUpdate?.(e.target.innerText, accent)
         // note that if the Kana isn't editable, firstClick will never be ture
         setFirstClick(true);
     };
@@ -32,7 +31,7 @@ export default function Kana({ text, onUpdate, editable = false}) {
             if (e.target.innerText.length == 0)
                 e.target.innerText = '\u00A0'; 
             if (e.target.innerText === '\u00A0') 
-                setType(0); // reset type if empty
+                onUpdate?.(text, 0); // reset type if empty
             e.target.blur(); // trigger onBlur and save
         }
     };
@@ -40,7 +39,7 @@ export default function Kana({ text, onUpdate, editable = false}) {
     return (
         // receive accent class only when type is non-zero
         <span 
-            className={`${type && `accent-${typeName[type]}`} ${editable && 'furigana'}`} 
+            className={`${accent && `accent-${accentName[accent]}`} ${editable && 'furigana'}`} 
             onClick={changeType}
             contentEditable={editable}
             suppressContentEditableWarning
