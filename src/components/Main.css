@@ -72,7 +72,23 @@
     border-radius: 50%;
     cursor: pointer;
     transition: all .2s ease;
-    overflow: hidden;
+    &:hover {
+        font-size: 2rem;
+        scale: 1.1;
+        /* background-color: color-mix(in hsl, var(--color-accent), #000 5%); */
+    }
+}
+
+.main .test-button {
+    position: relative;
+    width: 6rem;
+    height: 60rem;
+    margin: 2.5rem 0;
+    background-color: var(--color-accent);
+    color: var(--color-primary);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all .2s ease;
     &:hover {
         font-size: 2rem;
         scale: 1.1;
@@ -96,7 +112,7 @@
         transform: translate(-50%, -300%);    
     }
 }
-
+　
 .run-button:hover i {
         transition: all .2s ease;
         transform: translate(-50%, 150%);

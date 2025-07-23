@@ -25,11 +25,15 @@ export default function MainPage(props) {
     // On input change, update the paragraph and segment it into words
     let updateResult = async (e) => {
         const apiResult = await fetchFuriganaFromAPI(paragraph);
+
         if (apiResult.length > 0) {
             setWords(apiResult.map(entry => ({
                 surface: entry.surface,
-                furigana: [...entry.furigana].map(f => ({text: f, accent: 0})),
-                accent: 0 
+                furigana: [...entry.furigana].map((f, i) => ({
+                    text: f,
+                    accent: i+1 === entry.accent ? 2 : 0
+                })),
+                accent: entry.accent,
             })));
         } else {
             setWords([...segmenter.segment(paragraph)].map(s => ({
