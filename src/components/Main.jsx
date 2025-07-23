@@ -59,6 +59,8 @@ export default function MainPage(props) {
         const newText = e.target.innerText;
         setParagraph(newText);
 
+        setWords([]);
+
         const result = await fetchFuriganaFromAPI(newText);
         
         // fallback: 如果 API 沒回傳東西，就用 segmenter 自行分詞
