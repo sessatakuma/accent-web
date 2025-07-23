@@ -79,7 +79,7 @@ const Result = forwardRef(({words, setWords}, ref) => {
     const updateFurigana = (wordIndex, textIndex, newFurigana, newAccent) => {
         let newWords = [...words];
         newWords[wordIndex].furigana[textIndex].text = newFurigana;
-        newWords[wordIndex].furigana[textIndex].accent = +(newFurigana === '\u00A0') * newAccent;
+        newWords[wordIndex].furigana[textIndex].accent = +(newFurigana !== '\u00A0') * newAccent;
         setWords(newWords);
     }
 
@@ -98,10 +98,8 @@ const Result = forwardRef(({words, setWords}, ref) => {
                                         key={`${index}-${textIndex}`} 
                                         text={text} 
                                         accent={word.accent}
-                                        // TODO: add type={word.accent} if accent is implemented
                                         onUpdate={(ignore, newAccent) => updateKana(index, newAccent)}
                                         />
-                                        // TODO: add type={word.accent} if accent is implemented
                                     )}
                             {/* If there is furigana, display it in rt and make it editable */}
                             <rt>
@@ -110,7 +108,6 @@ const Result = forwardRef(({words, setWords}, ref) => {
                                         key={`${index}-${textIndex}`} 
                                         editable
                                         text={text.text} 
-                                        // TODO: add type={word.accent} if accent is implemented
                                         accent={text.accent}
                                         onUpdate={(newFurigana, newAccent) => updateFurigana(index, textIndex, newFurigana, newAccent)}
                                     />
