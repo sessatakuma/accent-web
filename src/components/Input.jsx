@@ -27,7 +27,7 @@ export default function Input({paragraph, setParagraph}) {
                 className='input-area'
                 contentEditable
                 suppressContentEditableWarning
-                onBlur={() => {setParagraph(e.target.innerText.trim());}}
+                onBlur={(e) => {setParagraph(e.target.innerText.trim());}}
                 onKeyDown={handleKeyDown}
                 data-placeholder=""
                 >
