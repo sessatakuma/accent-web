@@ -27,24 +27,28 @@ export default function MainPage(props) {
             return{surface: s.segment, furigana: 'あ', accent: 0}}
         ));
         setTimeout(() => {
-            window.scrollTo({ top: getRect(resultRef).top - getRect(resultRef).height / 16, behavior: 'smooth' });
+            window.scrollTo({ top: getRect(resultRef).top - getRect(resultRef).height / 8, behavior: 'smooth' });
         }, 0);
     }
 
     return (
         <main className='main'>
             <header className='nav'>
-                <span className='title'>せっさたくま</span>
+                <div className='nav-title'>
+                    <img className='logo' src='images/logo.png' alt='Logo' />
+                    <span className='title'>せっさたくま</span>
+                </div>
                 <div className='nav-buttons'>
                     <button>中</button>
-                    <button><i className="fa-solid fa-moon"></i></button>
+                    <button><i className="fa-solid fa-moon" /></button>
                 </div>
             </header>
-            <Input paragraph={paragraph} setParagraph={setParagraph}/>
+            <Input paragraph={paragraph} setParagraph={setParagraph} />
             <button className='run-button' onClick={updateResult}>
-                <i className="fa-solid fa-arrow-down"></i>
+                <i className="fa-solid fa-arrow-down" />
+                <i className="fa-solid fa-arrow-down" />
             </button>
-            <Result words={words} setWords={setWords} ref={resultRef}/>
+            <Result words={words} setWords={setWords} ref={resultRef} />
         </main>
     );
 }

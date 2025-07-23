@@ -104,6 +104,7 @@ const Result = forwardRef(({words, setWords}, ref) => {
                         </ruby>
                     )}
                 </p>
+                
                 <div className='result-buttons'>
                     <button className='copy-button' onClick={copyResult}>
                         <i className="fa-solid fa-copy"></i>

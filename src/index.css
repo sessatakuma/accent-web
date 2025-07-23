@@ -19,6 +19,7 @@ body {
         'Open Sans', 
         'Helvetica Neue', 
         sans-serif;
+    overflow-x: hidden;
 }
 
 .visually-hidden {
