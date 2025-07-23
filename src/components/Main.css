@@ -1,19 +1,18 @@
 .main {
     width: 100vw;
-    height: 200vh;
+    height: 190vh;
 
     background-color: var(--color-secondary);
 
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 1rem;
 }
 
 .main .nav {
     width: 100%;
     padding: 0 4rem;
-    height: 4rem;
+    height: 7.5vh;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -29,13 +28,14 @@
 .main .nav-title {
     display: flex;
     align-items: center;
+    gap: .2rem;
     & .title {
         font-weight: 800;
-        font-size: 1.6rem;
+        font-size: clamp(.5rem, .5rem + 2vh, 1.6rem);
     }
     & .logo {
-        width: 3rem;
-        height: 3rem;
+        width: 5vh;
+        height: 5vh;
     }
 }
 
@@ -48,8 +48,9 @@
         background-color: var(--color-secondary);
         color: var(--color-primary);
         border: none;
-        width: 2rem;
-        height: 2rem;
+        width: 4vh;
+        height: 4vh;
+        font-size: clamp(.2rem, .2rem + 2vh, 1rem);
         display: grid;
         place-items: center;
         border-radius: 50%;
@@ -64,31 +65,15 @@
 
 .main .run-button {
     position: relative;
-    width: 6rem;
-    height: 6rem;
-    margin: 2.5rem 0;
+    width: 10vh;
+    height: 10vh;
+    margin: 5vh 0;
     background-color: var(--color-accent);
     color: var(--color-primary);
     border-radius: 50%;
     cursor: pointer;
-    transition: all .2s ease;
-    &:hover {
-        font-size: 2rem;
-        scale: 1.1;
-        /* background-color: color-mix(in hsl, var(--color-accent), #000 5%); */
-    }
-}
-
-.main .test-button {
-    position: relative;
-    width: 6rem;
-    height: 60rem;
-    margin: 2.5rem 0;
-    background-color: var(--color-accent);
-    color: var(--color-primary);
-    border-radius: 50%;
-    cursor: pointer;
-    transition: all .2s ease;
+    transition: font-size scale .2s ease;
+    overflow: hidden;
     &:hover {
         font-size: 2rem;
         scale: 1.1;
@@ -97,8 +82,8 @@
 }
 
 .run-button i {
-    width: 2rem;
-    height: 2rem;
+    width: 5vh;
+    height: 5vh;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -112,12 +97,12 @@
         transform: translate(-50%, -300%);    
     }
 }
-　
+
 .run-button:hover i {
-        transition: all .2s ease;
+        transition: transform .2s ease;
         transform: translate(-50%, 150%);
     &:first-child {
-        transition: all .2s ease .3s;
+        transition: transform .2s ease .3s;
         transform: translate(-50%, -50%);
     }
 }
