@@ -14,10 +14,12 @@ export async function fetchFuriganaFromAPI(text) {
             return data.result.map(entry => {
                 const surface = entry.surface;
                 const furigana = entry.furigana;
+                const accent = entry.accent
 
                 return {
                     surface,
-                    furigana: isKana(surface) ? '' : furigana // kanji 才帶 furigana
+                    furigana: isKana(surface) ? '' : furigana, // kanji 才帶 furigana
+                    accent
                 };
             });
         } else {
