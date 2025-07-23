@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
 
+
 import Kana from 'components/Kana.jsx';
 import getRect from 'utilities/getRect.jsx';
+import { toPng } from 'html-to-image';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 import 'components/Main.css';
 import 'utilities/accentMarker.css';
 import 'utilities/colorPalette.css';
@@ -19,6 +23,7 @@ export default function MainPage(props) {
     const [showCopyDescription, setShowCopyDescription] = useState(false); 
 
     const resultRef = React.useRef(null);
+    const resultSectionRef = React.useRef(null);
 
     const generateRandomParagraph = () => {
         const examples = [
@@ -37,7 +42,7 @@ export default function MainPage(props) {
             return{surface: s.segment, furigana: 'あ'}}
         ));
         setTimeout(() => {
-            window.scrollTo({ top: getRect(resultRef).top - getRect(resultRef).height / 16, behavior: 'smooth' });
+            window.scrollTo({ top: getRect(resultSectionRef).top - getRect(resultSectionRef).height / 16, behavior: 'smooth' });
         }, 0);
     }
 
@@ -74,6 +79,37 @@ export default function MainPage(props) {
         });
     };
 
+    const downloadImage = () => {
+        if (resultRef.current === null) return;
+
+        toPng(resultRef.current)
+            .then(dataUrl => {
+                const link = document.createElement('a');
+                link.download = 'accented-text.png';
+                link.href = dataUrl;
+                link.click();
+            })
+            .catch(err => {
+                console.error('画像の生成に失敗しました', err);
+            });
+    };
+
+    const downloadPDF = () => {
+        if (resultRef.current === null) return;
+
+        html2canvas(resultRef.current).then(canvas => {
+            const imgData = canvas.toDataURL('image/png');
+            const pdf = new jsPDF({
+                orientation: 'portrait',
+                unit: 'px',
+                format: [canvas.width, canvas.height]
+            });
+            pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
+            pdf.save('accented-text.pdf');
+        }).catch(err => {
+            console.error('PDFの生成に失敗しました', err);
+        });
+    };
 
     return <>
         <main className='main'>
@@ -103,9 +139,9 @@ export default function MainPage(props) {
             <button className='run-button' onClick={updateResult}>
                 <i class="fa-solid fa-arrow-down"></i>
                 </button>
-            <section className='result-section' ref={resultRef}>
+            <section className='result-section' ref={resultSectionRef}>
                 <h3 className='result-description'>クリックしてアクセントを編集</h3>
-                <p className='result-area'>
+                <p className='result-area' ref={resultRef}>
                     {/* Display words according to surface and furigana */}
                     {words.map((word, index) => 
                         <ruby key={`${index}-${word}`}>
@@ -141,9 +177,9 @@ export default function MainPage(props) {
                     <i className="fa-solid fa-download download"></i>
                     <div className='share-buttons'>
                         <button className='image-button'>
-                            <i className="fa-solid fa-image"></i>
+                            <i className="fa-solid fa-image" onClick={downloadImage}></i>
                         </button>
-                        <button className='pdf-button'>
+                        <button className='pdf-button' onClick={downloadPDF}>
                             <i className="fa-solid fa-file-pdf"></i>
                         </button>
                     </div>

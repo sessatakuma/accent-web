@@ -138,6 +138,7 @@
     padding: 1rem;
     user-select: none;
     line-height: 2.5;
+    resize: both;
 }
 
 .main .result-area .furigana {
@@ -181,7 +182,7 @@
     }
 
     &.copy-button {
-        height: 4rem;;
+        height: 3rem;;
     }
 }
 
