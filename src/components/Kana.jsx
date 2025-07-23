@@ -5,6 +5,7 @@ export default function Kana({ text, accent, onUpdate, editable = false}) {
     // if editable, set firstClick to true
     // this is to block the first click from changing the accent type
     const [firstClick, setFirstClick] = useState(editable);
+    const [reset, setReset] = useState(false); // reset accent type when empty
     const accentName = ['none', 'flat', 'drop'];
     
     const changeType = () => {
@@ -14,14 +15,15 @@ export default function Kana({ text, accent, onUpdate, editable = false}) {
         setFirstClick(false);
     };
 
-    let finishEditing = e => {
+    const finishEditing = e => {
         if (!editable) return;
-        onUpdate?.(e.target.innerText, accent)
+        onUpdate?.(e.target.innerText, reset && accent)
         // note that if the Kana isn't editable, firstClick will never be ture
         setFirstClick(true);
+        setReset(false); 
     };
 
-    let handleKeyDown = e => {
+    const handleKeyDown = e => {
         if (e.key === 'Backspace') {
             if (e.target.innerText.length <= 1)
                 e.target.innerText = '\u00A0'; // leave a placeholder space
@@ -31,7 +33,7 @@ export default function Kana({ text, accent, onUpdate, editable = false}) {
             if (e.target.innerText.length == 0)
                 e.target.innerText = '\u00A0'; 
             if (e.target.innerText === '\u00A0') 
-                onUpdate?.(text, 0); // reset type if empty
+                setReset(true); // reset type if empty
             e.target.blur(); // trigger onBlur and save
         }
     };

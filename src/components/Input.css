@@ -1,0 +1,52 @@
+.input-section {
+    position: relative;
+    width: 32rem;
+    height: 44.5rem;
+    display: grid;
+    place-items: center;
+}
+
+.input-section .input-description {
+    margin-top: 2rem;
+    text-align: center;
+    color: var(--color-primary);
+}
+
+.input-section .input-area {
+    all: unset;
+    display: block;
+    box-sizing: border-box;
+
+    position: relative;
+    width: 32rem;
+    height: 40rem;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    
+    background-color: var(--color-primary);
+    color: var(--color-secondary);
+    cursor: text;
+    &:focus {
+        background-color: color-mix(in hsl, var(--color-primary), #000 5%);;
+    }
+    &:empty:not(:focus)::before {
+      content: attr(data-placeholder);
+      pointer-events: none;
+      display: block;
+      opacity: .8;
+    }
+}
+
+.input-section .generate-button {
+    width: 4rem;
+    height: 4rem;
+    background-color: #0000;
+    color: var(--color-secondary);
+    cursor: pointer;
+    border-radius: .5rem;;
+    transition: background-color .2s ease;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    font-size: 1.6rem;
+}

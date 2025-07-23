@@ -1,0 +1,98 @@
+.result-section {
+    position: relative;
+    width: 32rem;
+    height: 48rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.result-section .result-description {
+    text-align: center;
+    color: var(--color-primary);
+}
+
+.result-section .result-area {
+    width: 32rem;
+    height: 40rem;
+    background-color: var(--color-primary);
+    color: var(--color-secondary);
+    padding: 1rem;
+    user-select: none;
+    line-height: 2.5;
+    resize: both;
+}
+
+.result-section .result-area .furigana {
+    all: unset;
+    display: inline;
+
+    /* some variables passed by EditableStr */
+    width: var(--width);
+    height: var(--height);
+
+    text-align: center;
+    cursor: pointer;
+
+    &:focus {
+        cursor: text;
+        background-color: #0002;
+    }
+}
+
+.result-section .result-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding-right: .5rem;
+}
+
+.result-section .result-buttons button {
+    width: 4rem;
+    height: 2rem;
+    background-color: var(--color-accent);
+    color: var(--color-primary);
+    border: none;
+    border-radius: .5rem;
+    cursor: pointer;
+    transition: background-color .2s ease;
+
+    &:hover {
+        background-color: color-mix(in hsl, var(--color-accent), #000 5%);
+    }
+
+    &.copy-button {
+        height: 3rem;;
+    }
+}
+
+.result-section .share-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--color-primary);
+    gap: 1rem;
+    outline: var(--color-primary) solid .1rem;
+    outline-offset: .5rem;
+    border-radius: .5rem;
+}
+
+.result-section .download {
+    color: var(--color-primary);
+    height: 2rem;
+    position: absolute;
+    right: 11rem;
+    display: flex;
+    align-items: center;
+}
+
+.result-section .copy-description {
+    color: var(--color-primary);
+    left: 5rem;
+    position: absolute;
+    background-color: #fff5;
+    padding: .5rem 1.5rem;
+    transition: opacity .1s;
+}
