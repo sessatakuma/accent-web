@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 import Input from 'components/Input.jsx';
 import Result from 'components/Result.jsx';
 import getRect from 'utilities/getRect.jsx';
+import { fetchFuriganaFromAPI } from './callAPI.jsx';
+
 
 import 'components/Main.css';
 import 'utilities/accentMarker.css';
@@ -21,11 +23,22 @@ export default function MainPage(props) {
     const resultRef = React.useRef(null);
 
     // On input change, update the paragraph and segment it into words
-    let updateResult = e => {
-        setWords([...segmenter.segment(paragraph)].map(s => {
-        // TODO: add accent
-            return{surface: s.segment, furigana: 'あ', accent: 0}}
-        ));
+    let updateResult = async (e) => {
+        const apiResult = await fetchFuriganaFromAPI(paragraph);
+        if (apiResult.length > 0) {
+            setWords(apiResult.map(entry => ({
+                surface: entry.surface,
+                furigana: entry.furigana,
+                accent: 0 
+            })));
+        } else {
+            setWords([...segmenter.segment(paragraph)].map(s => ({
+                surface: s.segment,
+                furigana: '',
+                accent: 0
+            })));
+        }
+
         setTimeout(() => {
             window.scrollTo({ top: getRect(resultRef).top - getRect(resultRef).height / 16, behavior: 'smooth' });
         }, 0);
