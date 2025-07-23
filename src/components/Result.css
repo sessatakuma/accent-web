@@ -28,7 +28,11 @@
     color: #000;
 }
 
-.result-section .result-area .furigana {
+.result-section .kana {
+    cursor: pointer;
+}
+
+.result-section .furigana {
     all: unset;
     display: inline;
 

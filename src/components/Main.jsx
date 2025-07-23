@@ -28,7 +28,7 @@ export default function MainPage(props) {
         if (apiResult.length > 0) {
             setWords(apiResult.map(entry => ({
                 surface: entry.surface,
-                furigana: [...entry.furigana].map(f => ({ text: f, accent: 0})),
+                furigana: [...entry.furigana].map(f => ({text: f, accent: 0})),
                 accent: 0 
             })));
         } else {
