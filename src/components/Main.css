@@ -72,7 +72,6 @@
     border-radius: 50%;
     cursor: pointer;
     transition: all .2s ease;
-    overflow: hidden;
     &:hover {
         font-size: 2rem;
         scale: 1.1;
@@ -96,7 +95,7 @@
         transform: translate(-50%, -300%);    
     }
 }
-
+　
 .run-button:hover i {
         transition: all .2s ease;
         transform: translate(-50%, 150%);
