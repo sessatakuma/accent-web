@@ -1,13 +1,12 @@
 .input-section {
     position: relative;
     width: 32rem;
-    height: 44.5rem;
     display: grid;
     place-items: center;
+    margin-top: 6rem;
 }
 
 .input-section .input-description {
-    margin-top: 2rem;
     text-align: center;
     color: var(--color-primary);
 }
@@ -21,7 +20,6 @@
     width: 32rem;
     height: 40rem;
     padding: 1rem;
-    margin-bottom: 1rem;
     
     background-color: var(--color-primary);
     color: var(--color-secondary);
@@ -44,9 +42,21 @@
     color: var(--color-secondary);
     cursor: pointer;
     border-radius: .5rem;;
-    transition: background-color .2s ease;
+    transition: all .2s ease;
     position: absolute;
     right: 0;
     bottom: 0;
     font-size: 1.6rem;
+    &:hover {
+        scale: 1.1;
+        animation: wiggle .5s linear 1;
+    }
+}
+
+@keyframes wiggle {
+    0% { transform: rotate(0deg); }
+    25% { transform: rotate(10deg); }
+    50% { transform: rotate(-10deg); }
+    75% { transform: rotate(5deg); }
+    100% { transform: rotate(0deg); }
 }

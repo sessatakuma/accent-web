@@ -8,7 +8,8 @@ import 'components/Result.css';
 
 const Result = forwardRef(({words, setWords}, ref) => {
     const [showCopyDescription, setShowCopyDescription] = useState(false); 
-    
+    const [theme, setTheme] = useState(0); // Dark mode toggle
+
     const resultRef = React.useRef(null);
     
     const copyResult = () => {
@@ -104,6 +105,7 @@ const Result = forwardRef(({words, setWords}, ref) => {
                         </ruby>
                     )}
                 </p>
+                <button className={`color-button ${theme && 'dark'}`} onClick={() => setTheme(t => !t)}/>
                 <div className='result-buttons'>
                     <button className='copy-button' onClick={copyResult}>
                         <i className="fa-solid fa-copy"></i>

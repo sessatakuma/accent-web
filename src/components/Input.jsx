@@ -34,7 +34,7 @@ export default function Input({paragraph, setParagraph}) {
                 {paragraph}
             </p>
             <button className='generate-button' onClick={generateRandomParagraph}>
-                <i className="fa fa-dice"></i>
+                <i className="fa fa-dice" />
             </button>
         </section>
     );
