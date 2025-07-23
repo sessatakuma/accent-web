@@ -70,6 +70,19 @@ const Result = forwardRef(({words, setWords}, ref) => {
         });
     };
     
+    const updateKana = (wordIndex, newAccent) => {
+        let newWords = [...words];
+        newWords[wordIndex].accent = newAccent;
+        setWords(newWords);
+    }
+
+    const updateFurigana = (wordIndex, textIndex, newFurigana, newAccent) => {
+        let newWords = [...words];
+        newWords[wordIndex].furigana[textIndex].text = newFurigana;
+        newWords[wordIndex].furigana[textIndex].accent = +(newFurigana === '\u00A0') * newAccent;
+        setWords(newWords);
+    }
+
     return (
         <section className='result-section' ref={ref}>
                 <h3 className='result-description'>クリックしてアクセントを編集</h3>
@@ -81,26 +94,27 @@ const Result = forwardRef(({words, setWords}, ref) => {
                             {[...word.surface].map((text, textIndex) =>
                                 word.furigana ? 
                                     <span key={`${index}-${textIndex}`}>{text}</span> :
-                                    <Kana key={`${index}-${textIndex}`} text={text} accent={word.accent}/>
-                                    // TODO: add type={word.accent} if accent is implemented
-                            )}
+                                    <Kana 
+                                        key={`${index}-${textIndex}`} 
+                                        text={text} 
+                                        accent={word.accent}
+                                        // TODO: add type={word.accent} if accent is implemented
+                                        onUpdate={(ignore, newAccent) => updateKana(index, newAccent)}
+                                        />
+                                        // TODO: add type={word.accent} if accent is implemented
+                                    )}
                             {/* If there is furigana, display it in rt and make it editable */}
                             <rt>
-                                {word.furigana && 
+                                {[...word.furigana].map((text, textIndex) => 
                                     <Kana
+                                        key={`${index}-${textIndex}`} 
                                         editable
-                                        text={word.furigana} 
+                                        text={text.text} 
                                         // TODO: add type={word.accent} if accent is implemented
-                                        accent={word.accent}
-                                        onUpdate={
-                                            (newFurigana, newAccent) => {
-                                                let newWords = [...words];
-                                                newWords[index].furigana = newFurigana;
-                                                newWords[index].accent = newAccent;
-                                                setWords(newWords);
-                                            }
-                                        }
-                                    />}
+                                        accent={text.accent}
+                                        onUpdate={(newFurigana, newAccent) => updateFurigana(index, textIndex, newFurigana, newAccent)}
+                                    />
+                                )}
                             </rt>
                         </ruby>
                     )}
