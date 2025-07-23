@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import Input from 'components/Input.jsx';
 import Result from 'components/Result.jsx';
 import getRect from 'utilities/getRect.jsx';
-import { fetchFuriganaFromAPI } from './callAPI.jsx';
+import { fetchFuriganaFromAPI } from 'utilities/callAPI.jsx';
 
 
 import 'components/Main.css';
@@ -17,7 +17,7 @@ export default function MainPage(props) {
     const [paragraph, setParagraph] = useState("");
     // The placeholder furigana is set to 'あ' for all words, this can be changed later
     const [words, setWords] = useState([...segmenter.segment("")].map(s => 
-        {return{surface: s.segment, furigana: 'あ', accent: 0}}
+        {return{surface: s.segment, furigana: [{text: '', accent: 0}], accent: 0}}
     ));
 
     const resultRef = React.useRef(null);
@@ -28,13 +28,13 @@ export default function MainPage(props) {
         if (apiResult.length > 0) {
             setWords(apiResult.map(entry => ({
                 surface: entry.surface,
-                furigana: entry.furigana,
+                furigana: [...entry.furigana].map(f => ({ text: f, accent: 0})),
                 accent: 0 
             })));
         } else {
             setWords([...segmenter.segment(paragraph)].map(s => ({
                 surface: s.segment,
-                furigana: '',
+                furigana: [{text: '', accent: 0}],
                 accent: 0
             })));
         }
