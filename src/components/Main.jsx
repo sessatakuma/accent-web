@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 
-
 import Kana from 'components/Kana.jsx';
 import getRect from 'utilities/getRect.jsx';
 import { toPng } from 'html-to-image';
@@ -13,12 +12,11 @@ import 'utilities/colorPalette.css';
 export default function MainPage(props) {
     // Using Intl.Segmenter to segment Japanese text into words
     const segmenter = new Intl.Segmenter('ja', { granularity: 'word' })
-
     // Initial paragraph and words state, the placeholder text is just for testing
     const [paragraph, setParagraph] = useState("");
     // The placeholder furigana is set to 'あ' for all words, this can be changed later
     const [words, setWords] = useState([...segmenter.segment("")].map(s => 
-        {return{surface: s.segment, furigana: 'あ'}}
+        {return{surface: s.segment, furigana: 'あ', accent: 0}}
     ));
     const [showCopyDescription, setShowCopyDescription] = useState(false); 
 
@@ -39,7 +37,8 @@ export default function MainPage(props) {
     // On input change, update the paragraph and segment it into words
     let updateResult = e => {
         setWords([...segmenter.segment(paragraph)].map(s => {
-            return{surface: s.segment, furigana: 'あ'}}
+        // TODO: add accent
+            return{surface: s.segment, furigana: 'あ', accent: 0}}
         ));
         setTimeout(() => {
             window.scrollTo({ top: getRect(resultSectionRef).top - getRect(resultSectionRef).height / 16, behavior: 'smooth' });
@@ -149,7 +148,8 @@ export default function MainPage(props) {
                             {[...word.surface].map((text, textIndex) =>
                                 word.furigana ? 
                                     <span key={`${index}-${textIndex}`}>{text}</span> :
-                                    <Kana key={`${index}-${textIndex}`} text={text}/>
+                                    <Kana key={`${index}-${textIndex}`} text={text} accent={word.accent}/>
+                                    // TODO: add type={word.accent} if accent is implemented
                             )}
                             {/* If there is furigana, display it in rt and make it editable */}
                             <rt>
@@ -157,10 +157,13 @@ export default function MainPage(props) {
                                     <Kana
                                         editable
                                         text={word.furigana} 
+                                        // TODO: add type={word.accent} if accent is implemented
+                                        accent={word.accent}
                                         onUpdate={
-                                            newFurigana => {
+                                            (newFurigana, newAccent) => {
                                                 let newWords = [...words];
                                                 newWords[index].furigana = newFurigana;
+                                                newWords[index].accent = newAccent;
                                                 setWords(newWords);
                                             }
                                         }
