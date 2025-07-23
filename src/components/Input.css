@@ -1,13 +1,20 @@
 .input-section {
     position: relative;
-    width: 32rem;
-    display: grid;
-    place-items: center;
-    margin-top: 6rem;
+    width: 100%;
+    height: 80vh;
+    padding: 0 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding-top: 20vh;
 }
 
 .input-section .input-description {
     text-align: center;
+    position: absolute;
+    top: 15vh;
+    font-size: clamp(.8rem, .8rem + 2vw, 2rem);
     color: var(--color-primary);
 }
 
@@ -17,13 +24,15 @@
     box-sizing: border-box;
 
     position: relative;
-    width: 32rem;
-    height: 40rem;
+    width: clamp(10rem, 10rem + 40vw, 32rem);
+    height: 60vh;
     padding: 1rem;
+    overflow-y: auto;
     
     background-color: var(--color-primary);
     color: var(--color-secondary);
     cursor: text;
+    
     &:focus {
         background-color: color-mix(in hsl, var(--color-primary), #000 5%);;
     }
@@ -41,10 +50,10 @@
     background-color: #0000;
     color: var(--color-secondary);
     cursor: pointer;
-    border-radius: .5rem;;
-    transition: all .2s ease;
+    border-radius: 50%;
+    transition: scale .2s ease;
     position: absolute;
-    right: 0;
+    right: clamp(50vw - 16rem, 30vw - 5rem, 50vw - 5rem);;
     bottom: 0;
     font-size: 1.6rem;
     &:hover {
