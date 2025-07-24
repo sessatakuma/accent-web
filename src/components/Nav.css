@@ -1,0 +1,52 @@
+.nav {
+    width: 100%;
+    padding: 0 4rem;
+    height: 7.5vh;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: var(--color-primary);
+    color: var(--color-secondary);
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 4px #0001;
+}
+
+.nav .nav-title {
+    display: flex;
+    align-items: center;
+    gap: .2rem;
+    & .title {
+        font-weight: 800;
+        font-size: clamp(.5rem, .5rem + 2vh, 1.6rem);
+    }
+    & .logo {
+        width: 5vh;
+        height: 5vh;
+    }
+}
+
+.nav .nav-buttons {
+    display: flex;
+    gap: 1rem;
+
+    & button {
+        background-color: var(--color-secondary);
+        color: var(--color-primary);
+        border: none;
+        width: 4vh;
+        height: 4vh;
+        font-size: clamp(.2rem, .2rem + 2vh, 1rem);
+        display: grid;
+        place-items: center;
+        border-radius: 50%;
+        cursor: pointer;
+        transition: background-color .2s ease;
+
+        &:hover {
+            background-color: color-mix(in hsl, var(--color-secondary), #000 5%);
+        }
+    }
+}
