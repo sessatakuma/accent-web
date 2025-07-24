@@ -17,7 +17,7 @@ export default function MainPage(props) {
 
     return <>
         <Nav/>
-        <main className='main'>  
+        <main className='main' id='main'>  
             <Input paragraph={paragraph} setParagraph={setParagraph} />
             <Run setWords={setWords} paragraph={paragraph} resultRef={resultRef}/>
             <Result words={words} setWords={setWords} ref={resultRef} />

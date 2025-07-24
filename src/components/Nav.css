@@ -15,9 +15,13 @@
 }
 
 .nav .nav-title {
+    all: unset;
+    box-sizing: border-box;
+    margin-left: 4rem;
     display: flex;
     align-items: center;
     gap: .2rem;
+    cursor: pointer;
     & .title {
         font-weight: 800;
         font-size: clamp(.5rem, .5rem + 2vh, 1.6rem);
