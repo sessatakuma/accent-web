@@ -2,6 +2,7 @@ import React, { useState, forwardRef } from 'react';
 import { toPng } from 'html-to-image';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+import isKana from 'utilities/isKana.jsx';
 
 import Kana from 'components/Kana.jsx';
 import 'components/Result.css';
@@ -13,8 +14,6 @@ const Result = forwardRef(({words, setWords}, ref) => {
     const resultRef = React.useRef(null);
     
     const copyResult = () => {
-        const isKana = str => /^[ぁ-んァ-ンー　]+$/.test(str); // 平假/片假/長音/空白
-
         const content = words.map(word => {
             const surface = word.surface;
             const furigana = word.furigana;
@@ -70,9 +69,9 @@ const Result = forwardRef(({words, setWords}, ref) => {
         });
     };
     
-    const updateKana = (wordIndex, newAccent) => {
+    const updateKana = (wordIndex, textIndex, newAccent) => {
         let newWords = [...words];
-        newWords[wordIndex].accent = newAccent;
+        newWords[wordIndex].accent[textIndex] = newAccent;
         setWords(newWords);
     }
 
@@ -88,28 +87,28 @@ const Result = forwardRef(({words, setWords}, ref) => {
                 <h3 className='result-description'>クリックしてアクセントを編集</h3>
                 <p className='result-area' ref={resultRef}>
                     {/* Display words according to surface and furigana */}
-                    {words.map((word, index) => 
-                        <ruby key={`${index}-${word}`}>
+                    {words.map((word, wordIndex) => 
+                        <ruby key={`${wordIndex}-${word}`}>
                             {/* Kanji -> <span>, kana -> <Kana> (accent enabled) */}
-                            {[...word.surface].map((text, textIndex) =>
-                                word.furigana ? 
-                                    <span key={`${index}-${textIndex}`}>{text}</span> :
+                            {[...word.surface].map((char, charIndex) =>
+                                word.furigana.text ? 
+                                    <span key={`${wordIndex}-${charIndex}`}>{char}</span> :
                                     <Kana 
-                                        key={`${index}-${textIndex}`} 
-                                        text={text} 
-                                        accent={word.accent}
-                                        onUpdate={(ignore, newAccent) => updateKana(index, newAccent)}
+                                        key={`${wordIndex}-${charIndex}`} 
+                                        text={char} 
+                                        accent={word.accent[charIndex]}
+                                        onUpdate={(ignore, newAccent) => updateKana(wordIndex, charIndex, newAccent)}
                                         />
                                     )}
                             {/* If there is furigana, display it in rt and make it editable */}
                             <rt>
-                                {[...word.furigana].map((text, textIndex) => 
+                                {[...word.furigana].map((char, charIndex) => 
                                     <Kana
-                                        key={`${index}-${textIndex}`} 
+                                        key={`${wordIndex}-${charIndex}`} 
                                         editable
-                                        text={text.text} 
-                                        accent={text.accent}
-                                        onUpdate={(newFurigana, newAccent) => updateFurigana(index, textIndex, newFurigana, newAccent)}
+                                        text={char.text} 
+                                        accent={char.accent}
+                                        onUpdate={(newFurigana, newAccent) => updateFurigana(wordIndex, charIndex, newFurigana, newAccent)}
                                     />
                                 )}
                             </rt>

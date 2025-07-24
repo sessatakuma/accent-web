@@ -7,9 +7,9 @@ export default function Kana({ text, accent, onUpdate, editable = false}) {
     const [firstClick, setFirstClick] = useState(editable);
     const accentName = ['none', 'flat', 'drop'];
     
-    const changeType = () => {
+    const changeType = e => {
         // if it's the first click that will start an edit, don't change type
-        onUpdate?.(text, (accent + 1 - firstClick) % 3);
+        onUpdate?.(e.target.innerText, (accent + 1 - firstClick) % 3);
         // it isn't the first click anymore till finish editing
         setFirstClick(false);
     };
@@ -37,7 +37,7 @@ export default function Kana({ text, accent, onUpdate, editable = false}) {
     return (
         // receive accent class only when type is non-zero
         <span 
-            className={`kana ${accent && `accent-${accentName[accent]}`} ${editable && 'furigana'}`} 
+            className={`kana ${accent ? `accent-${accentName[accent]}` : ''} ${editable ? 'furigana' : ''}`} 
             onClick={changeType}
             contentEditable={editable}
             suppressContentEditableWarning

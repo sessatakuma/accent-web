@@ -1,4 +1,4 @@
-const isKana = str => /^[ぁ-んァ-ンー。、.　]+$/.test(str); 
+import isKana from 'utilities/isKana.jsx';
 
 export async function fetchFuriganaFromAPI(text) {
     try {
