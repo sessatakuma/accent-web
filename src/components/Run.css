@@ -1,18 +1,57 @@
+@property --progress {
+    syntax: '<length-percentage>';
+    inherits: false;
+    initial-value: 0%;
+}
+
 .run-button {
+    --size: 10vh;
+    --bar-width: .5rem;
+
     position: relative;
-    width: 10vh;
-    height: 10vh;
+    width: var(--size);
+    aspect-ratio: 1 / 1;
     margin: 5vh 0;
-    background-color: var(--color-accent);
+
+    background: var(--color-accent);
     color: var(--color-primary);
     border-radius: 50%;
+
     cursor: pointer;
-    transition: font-size scale .2s ease;
+    transition: 
+        font-size .2s ease, 
+        scale .2s ease, 
+        --progress .5s;
     overflow: hidden;
-    &:hover {
+    
+    display: grid;
+    place-items: center;
+
+    &:hover:not(.running) {
         font-size: 2rem;
         scale: 1.1;
-        /* background-color: color-mix(in hsl, var(--color-accent), #000 5%); */
+    }
+
+    &::after {
+        content: '';
+        background: var(--color-accent);
+        border-radius: inherit;
+        width: calc(100% - var(--bar-width));
+        aspect-ratio: 1 / 1;
+
+        display: grid;
+    }
+
+    &.running {
+        background: conic-gradient(
+        var(--color-primary) var(--progress, 0),
+        color-mix(in hsl, var(--color-accent), #000 5%) 0%
+        );
+        cursor: wait
+    }
+
+    &.running::after {
+        background-color: color-mix(in hsl, var(--color-accent), #000 5%);
     }
 }
 
@@ -33,7 +72,7 @@
     }
 }
 
-.run-button:hover i {
+.run-button:hover:not(.running) i {
         transition: transform .2s ease;
         transform: translate(-50%, 150%);
     &:first-child {
