@@ -57,6 +57,7 @@
     right: .5rem;
     bottom: calc(20vh + .5rem);
 
+    color: #ddd;
     background-color: #444;
     border-radius: 50%;
     cursor: pointer;
@@ -66,6 +67,7 @@
         transition: scale .2s ease;
     }
     &.dark {
+        color: var(--color-primary);
         background-color: var(--color-secondary);
     }
 }

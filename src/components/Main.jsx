@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 
+import Nav from 'components/Nav.jsx';
 import Input from 'components/Input.jsx';
 import Run from 'components/Run.jsx';
 import Result from 'components/Result.jsx';
+import ToTop from 'components/ToTop.jsx';
+import Footer from 'components/Footer.jsx';
 
 import 'components/Main.css';
 import 'utilities/accentMarker.css';
@@ -14,21 +17,14 @@ export default function MainPage(props) {
 
     const resultRef = React.useRef(null);
 
-    return (
-        <main className='main'>
-            <header className='nav'>
-                <div className='nav-title'>
-                    <img className='logo' src='images/logo.png' alt='Logo' />
-                    <span className='title'>せっさたくま</span>
-                </div>
-                <div className='nav-buttons'>
-                    <button onClick={() => {console.log(words);}}>中</button>
-                    <button><i className="fa-solid fa-moon" /></button>
-                </div>
-            </header>
+    return <>
+        <Nav/>
+        <main className='main' id='main'>  
             <Input paragraph={paragraph} setParagraph={setParagraph} />
             <Run setWords={setWords} paragraph={paragraph} resultRef={resultRef}/>
             <Result words={words} setWords={setWords} ref={resultRef} />
         </main>
-    );
+        <ToTop/>
+        <Footer/>
+    </>;
 }

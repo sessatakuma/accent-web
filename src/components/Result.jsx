@@ -9,7 +9,7 @@ import 'components/Result.css';
 
 const Result = forwardRef(({words, setWords}, ref) => {
     const [showCopyDescription, setShowCopyDescription] = useState(false); 
-    const [theme, setTheme] = useState(0); // Dark mode toggle
+    const [theme, setTheme] = useState(0); 
 
     const resultRef = React.useRef(null);
     
@@ -84,54 +84,63 @@ const Result = forwardRef(({words, setWords}, ref) => {
 
     return (
         <section className='result-section' ref={ref}>
-                <h3 className='result-description'>クリックしてアクセントを編集</h3>
-                <p className='result-area' ref={resultRef}>
-                    {/* Display words according to surface and furigana */}
-                    {words.map((word, wordIndex) => 
-                        <ruby key={`${wordIndex}-${word}`}>
-                            {/* Kanji -> <span>, kana -> <Kana> (accent enabled) */}
-                            {[...word.surface].map((char, charIndex) =>
-                                word.furigana.text ? 
-                                    <span key={`${wordIndex}-${charIndex}`}>{char}</span> :
-                                    <Kana 
-                                        key={`${wordIndex}-${charIndex}`} 
-                                        text={char} 
-                                        accent={word.accent[charIndex]}
-                                        onUpdate={(ignore, newAccent) => updateKana(wordIndex, charIndex, newAccent)}
-                                        />
-                                    )}
-                            {/* If there is furigana, display it in rt and make it editable */}
-                            <rt>
-                                {[...word.furigana].map((char, charIndex) => 
-                                    <Kana
-                                        key={`${wordIndex}-${charIndex}`} 
-                                        editable
-                                        text={char.text} 
-                                        accent={char.accent}
-                                        onUpdate={(newFurigana, newAccent) => updateFurigana(wordIndex, charIndex, newFurigana, newAccent)}
+            <h3 className='result-description'>クリックしてアクセントを編集</h3>
+            <p className='result-area' ref={resultRef}>
+                {/* Display words according to surface and furigana */}
+                {words.map((word, wordIndex) => 
+                    <ruby key={`${wordIndex}-${word}`}>
+                        {/* Kanji -> <span>, kana -> <Kana> (accent enabled) */}
+                        {[...word.surface].map((char, charIndex) =>
+                            word.furigana.text ? 
+                                <span key={`${wordIndex}-${charIndex}`}>{char}</span> :
+                                <Kana 
+                                    key={`${wordIndex}-${charIndex}`} 
+                                    text={char} 
+                                    accent={word.accent[charIndex]}
+                                    onUpdate={(ignore, newAccent) => 
+                                        updateKana(wordIndex, charIndex, newAccent)}
                                     />
                                 )}
-                            </rt>
-                        </ruby>
-                    )}
-                </p>
-                <button className={`color-button ${theme && 'dark'}`} onClick={() => setTheme(t => !t)}/>
-                <div className='result-buttons'>
-                    <button className='copy-button' onClick={copyResult}>
-                        <i className="fa-solid fa-copy"></i>
+                        {/* If there is furigana, display it in rt and make it editable */}
+                        <rt>
+                            {[...word.furigana].map((char, charIndex) => 
+                                <Kana
+                                    key={`${wordIndex}-${charIndex}`} 
+                                    editable
+                                    text={char.text} 
+                                    accent={char.accent}
+                                    onUpdate={(newFurigana, newAccent) => 
+                                        updateFurigana(wordIndex, charIndex, newFurigana, newAccent)}
+                                />
+                            )}
+                        </rt>
+                    </ruby>
+                )}
+            </p>
+            <button 
+                className={`color-button ${theme && 'dark'}`} 
+                onClick={() => setTheme(t => !t)}
+            >
+                <i className={'fa-solid fa-palette'}/>
+            </button>
+            <div className='result-buttons'>
+                <button className='copy-button' onClick={copyResult}>
+                    <i className="fa-solid fa-copy"/>
+                </button>
+                <span className='copy-description' style={{opacity: +showCopyDescription}}>
+                    コピーしました！
+                </span>
+                <i className="fa-solid fa-download download"/>
+                <div className='share-buttons'>
+                    <button className='image-button'>
+                        <i className="fa-solid fa-image" onClick={downloadImage}/>
                     </button>
-                    <span className='copy-description' style={{opacity: +showCopyDescription}}>コピーしました！</span>
-                    <i className="fa-solid fa-download download"></i>
-                    <div className='share-buttons'>
-                        <button className='image-button'>
-                            <i className="fa-solid fa-image" onClick={downloadImage}></i>
-                        </button>
-                        <button className='pdf-button' onClick={downloadPDF}>
-                            <i className="fa-solid fa-file-pdf"></i>
-                        </button>
-                    </div>
+                    <button className='pdf-button' onClick={downloadPDF}>
+                        <i className="fa-solid fa-file-pdf"/>
+                    </button>
                 </div>
-            </section>
+            </div>
+        </section>
     )
 })
 
