@@ -1,0 +1,43 @@
+.run-button {
+    position: relative;
+    width: 10vh;
+    height: 10vh;
+    margin: 5vh 0;
+    background-color: var(--color-accent);
+    color: var(--color-primary);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: font-size scale .2s ease;
+    overflow: hidden;
+    &:hover {
+        font-size: 2rem;
+        scale: 1.1;
+        /* background-color: color-mix(in hsl, var(--color-accent), #000 5%); */
+    }
+}
+
+.run-button i {
+    width: 5vh;
+    height: 5vh;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: 0s;
+    &:first-child {
+        transition: 0s;
+        transform: translate(-50%, -300%);    
+    }
+}
+
+.run-button:hover i {
+        transition: transform .2s ease;
+        transform: translate(-50%, 150%);
+    &:first-child {
+        transition: transform .2s ease .3s;
+        transform: translate(-50%, -50%);
+    }
+}
