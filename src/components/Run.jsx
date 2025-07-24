@@ -6,6 +6,7 @@ import { fetchFuriganaFromAPI } from 'utilities/callAPI.jsx';
 import 'components/Run.css';
 
 export default function Run ({setWords, paragraph, resultRef}) {
+    const [progress, setProgress] = React.useState(0);
     // Using Intl.Segmenter to segment Japanese text into words
     const segmenter = new Intl.Segmenter('ja', { granularity: 'word' });
 
@@ -36,7 +37,23 @@ export default function Run ({setWords, paragraph, resultRef}) {
 
     // On input change, update the paragraph and segment it into words
     const updateResult = async (e) => {
+        if (progress > 0) 
+            return;
+        const progressInterval = setInterval(() => {
+            setProgress(prev => {
+                if (prev >= 80) {
+                    clearInterval(progressInterval);
+
+                    return prev;
+                }
+                return prev + 1;
+            });
+        }, 1000);
+
         const newWords = await fetchFuriganaFromAPI(paragraph);
+
+        clearInterval(progressInterval);
+        setProgress(100);
 
         if (newWords.length > 0) {
             setWords(newWords.map((word, wordIndex) => {
@@ -64,13 +81,19 @@ export default function Run ({setWords, paragraph, resultRef}) {
         
         setTimeout(() => {
             window.scrollTo({ top: getRect(resultRef).top - getRect(resultRef).height / 8, behavior: 'smooth' });
-        }, 0);
+            setProgress(0);
+        }, 1000);
+
 
         console.log(newWords);
     }
 
     return (
-        <button className='run-button' onClick={updateResult}>
+        <button 
+            className={`run-button ${progress > 0 ? ' running' : ''}`}
+            onClick={updateResult}
+            style={{'--progress': progress + '%'}}
+        >
             <i className="fa-solid fa-arrow-down" />
             <i className="fa-solid fa-arrow-down" />
         </button>

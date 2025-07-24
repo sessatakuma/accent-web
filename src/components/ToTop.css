@@ -16,7 +16,7 @@
     &:hover {
         scale: 1.1;
     }
-    & i {
+    i {
         font-size: clamp(.5rem, .5rem + 2vh, 1.6rem);
     }
     &.hidden {

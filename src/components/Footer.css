@@ -1,4 +1,5 @@
 .footer {
+    width: 100vw;
     height: 10vh;
     background-color: var(--color-primary);
     display: flex;
@@ -11,5 +12,10 @@
 
 .footer a {
     all: unset;
-    font-size: 2rem;;
+    font-size: 2rem;
+    transition: .2s ease;
+    &:hover {
+        scale: 1.1;
+        color: var(--color-secondary);
+    }
 }

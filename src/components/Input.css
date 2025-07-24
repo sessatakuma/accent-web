@@ -13,6 +13,7 @@
 .input-section .input-description {
     text-align: center;
     position: absolute;
+    pointer-events: none;
     top: 15vh;
     font-size: clamp(.8rem, .8rem + 2vw, 2rem);
     color: var(--color-primary);
@@ -31,9 +32,10 @@
     
     background-color: var(--color-primary);
     color: var(--color-secondary);
-    cursor: text;
+    cursor: pointer;
     
     &:focus {
+        cursor: text;
         background-color: color-mix(in hsl, var(--color-primary), #000 5%);;
     }
     &:empty:not(:focus)::before {
