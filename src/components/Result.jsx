@@ -16,7 +16,6 @@ const Result = forwardRef(({words, setWords}, ref) => {
     const copyResult = () => {
         const content = words.map(word => {
             const surface = word.surface;
-            const furigana = word.furigana;
 
             // no kanji
             if (isKana(surface)) {
@@ -24,6 +23,10 @@ const Result = forwardRef(({words, setWords}, ref) => {
             }
 
             // kanji
+            const furigana = Array.isArray(word.furigana)
+                ? word.furigana.map(f => f.text).join('')
+                : '';
+
             return `{${surface}|${furigana}}`;
         }).join('');
 
