@@ -2,18 +2,21 @@ import React, { useState, forwardRef } from 'react';
 import { toPng } from 'html-to-image';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
-import isKana from 'utilities/isKana.jsx';
 
 import Kana from 'components/Kana.jsx';
 import 'components/Result.css';
+import isKana from 'utilities/isKana.jsx';
+
 
 const Result = forwardRef(({words, setWords}, ref) => {
     const [showCopyDescription, setShowCopyDescription] = useState(false); 
-    const [theme, setTheme] = useState(0); 
+    const [theme, setTheme] = useState(0); // Dark mode toggle
 
     const resultRef = React.useRef(null);
     
     const copyResult = () => {
+
+
         const content = words.map(word => {
             const surface = word.surface;
             const furigana = word.furigana;
@@ -29,6 +32,7 @@ const Result = forwardRef(({words, setWords}, ref) => {
                 : furigana;
 
             return `{${surface}|${furiganaText}}`;
+
         }).join('');
 
         navigator.clipboard.writeText(content).then(() => {
@@ -73,9 +77,9 @@ const Result = forwardRef(({words, setWords}, ref) => {
         });
     };
     
-    const updateKana = (wordIndex, textIndex, newAccent) => {
+    const updateKana = (wordIndex, newAccent) => {
         let newWords = [...words];
-        newWords[wordIndex].accent[textIndex] = newAccent;
+        newWords[wordIndex].accent = newAccent;
         setWords(newWords);
     }
 
@@ -88,63 +92,54 @@ const Result = forwardRef(({words, setWords}, ref) => {
 
     return (
         <section className='result-section' ref={ref}>
-            <h3 className='result-description'>クリックしてアクセントを編集</h3>
-            <p className='result-area' ref={resultRef}>
-                {/* Display words according to surface and furigana */}
-                {words.map((word, wordIndex) => 
-                    <ruby key={`${wordIndex}-${word}`}>
-                        {/* Kanji -> <span>, kana -> <Kana> (accent enabled) */}
-                        {[...word.surface].map((char, charIndex) =>
-                            word.furigana.text ? 
-                                <span key={`${wordIndex}-${charIndex}`}>{char}</span> :
-                                <Kana 
-                                    key={`${wordIndex}-${charIndex}`} 
-                                    text={char} 
-                                    accent={word.accent[charIndex]}
-                                    onUpdate={(ignore, newAccent) => 
-                                        updateKana(wordIndex, charIndex, newAccent)}
+                <h3 className='result-description'>クリックしてアクセントを編集</h3>
+                <p className='result-area' ref={resultRef}>
+                    {/* Display words according to surface and furigana */}
+                    {words.map((word, index) => 
+                        <ruby key={`${index}-${word}`}>
+                            {/* Kanji -> <span>, kana -> <Kana> (accent enabled) */}
+                            {[...word.surface].map((text, textIndex) =>
+                                word.furigana ? 
+                                    <span key={`${index}-${textIndex}`}>{text}</span> :
+                                    <Kana 
+                                        key={`${index}-${textIndex}`} 
+                                        text={text} 
+                                        accent={word.accent}
+                                        onUpdate={(ignore, newAccent) => updateKana(index, newAccent)}
+                                        />
+                                    )}
+                            {/* If there is furigana, display it in rt and make it editable */}
+                            <rt>
+                                {[...word.furigana].map((text, textIndex) => 
+                                    <Kana
+                                        key={`${index}-${textIndex}`} 
+                                        editable
+                                        text={text.text} 
+                                        accent={text.accent}
+                                        onUpdate={(newFurigana, newAccent) => updateFurigana(index, textIndex, newFurigana, newAccent)}
                                     />
                                 )}
-                        {/* If there is furigana, display it in rt and make it editable */}
-                        <rt>
-                            {[...word.furigana].map((char, charIndex) => 
-                                <Kana
-                                    key={`${wordIndex}-${charIndex}`} 
-                                    editable
-                                    text={char.text} 
-                                    accent={char.accent}
-                                    onUpdate={(newFurigana, newAccent) => 
-                                        updateFurigana(wordIndex, charIndex, newFurigana, newAccent)}
-                                />
-                            )}
-                        </rt>
-                    </ruby>
-                )}
-            </p>
-            <button 
-                className={`color-button ${theme && 'dark'}`} 
-                onClick={() => setTheme(t => !t)}
-            >
-                <i className={'fa-solid fa-palette'}/>
-            </button>
-            <div className='result-buttons'>
-                <button className='copy-button' onClick={copyResult}>
-                    <i className="fa-solid fa-copy"/>
-                </button>
-                <span className='copy-description' style={{opacity: +showCopyDescription}}>
-                    コピーしました！
-                </span>
-                <i className="fa-solid fa-download download"/>
-                <div className='share-buttons'>
-                    <button className='image-button'>
-                        <i className="fa-solid fa-image" onClick={downloadImage}/>
+                            </rt>
+                        </ruby>
+                    )}
+                </p>
+                <button className={`color-button ${theme && 'dark'}`} onClick={() => setTheme(t => !t)}/>
+                <div className='result-buttons'>
+                    <button className='copy-button' onClick={copyResult}>
+                        <i className="fa-solid fa-copy"></i>
                     </button>
-                    <button className='pdf-button' onClick={downloadPDF}>
-                        <i className="fa-solid fa-file-pdf"/>
-                    </button>
+                    <span className='copy-description' style={{opacity: +showCopyDescription}}>コピーしました！</span>
+                    <i className="fa-solid fa-download download"></i>
+                    <div className='share-buttons'>
+                        <button className='image-button'>
+                            <i className="fa-solid fa-image" onClick={downloadImage}></i>
+                        </button>
+                        <button className='pdf-button' onClick={downloadPDF}>
+                            <i className="fa-solid fa-file-pdf"></i>
+                        </button>
+                    </div>
                 </div>
-            </div>
-        </section>
+            </section>
     )
 })
 
