@@ -24,7 +24,11 @@ const Result = forwardRef(({words, setWords}, ref) => {
             }
 
             // kanji
-            return `{${surface}|${furigana}}`;
+            const furiganaText = Array.isArray(furigana)
+                ? furigana.map(f => f.text).join('')
+                : furigana;
+
+            return `{${surface}|${furiganaText}}`;
         }).join('');
 
         navigator.clipboard.writeText(content).then(() => {
