@@ -57,14 +57,14 @@ export default function Run ({setWords, paragraph, resultRef}) {
 
         if (newWords.length > 0) {
             setWords(newWords.map((word, wordIndex) => {
-                const isempty = (word.furigana.length == 0);
+                const isEmpty = (word.furigana.length == 0);
                 return {
                     surface: word.surface,
                     furigana: [...word.furigana].map((f, i) => ({
                         text:  f,
                         accent: calcAccent(newWords, wordIndex, i, word.surface, word.accent)
                     })),
-                    accent: isempty ? 
+                    accent: isEmpty ? 
                         [...word.surface].map((c, i) => 
                             calcAccent(newWords, wordIndex, i, word.surface, word.accent)
                         ) : 
