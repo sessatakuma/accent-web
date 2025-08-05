@@ -1,5 +1,6 @@
 import isKana from 'utilities/isKana.jsx';
 import { splitKanaSyllables } from 'utilities/kanaUtils.jsx';
+import { placeholder } from 'utilities/placeholder.jsx';
 
 export async function fetchFuriganaFromAPI(text) {
     try {
@@ -12,12 +13,16 @@ export async function fetchFuriganaFromAPI(text) {
         const data = await response.json();
 
         if (response.ok && data.status === 200 && Array.isArray(data.result)) {
+            // TODO: add placeholder for foreign words
             return data.result.map(entry => {
+                let furigana = entry.furigana;
+                if (isKana(entry.surface)) 
+                    furigana = '';
+                else 
+                    furigana = splitKanaSyllables(furigana);
                 return {
                     surface: entry.surface,
-                    furigana: isKana(surface) ? 
-                        '' :
-                        splitKanaSyllables(entry.furigana),
+                    furigana,
                     accent: entry.accent,
                 };
             });
