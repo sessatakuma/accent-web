@@ -19,13 +19,18 @@ const Result = forwardRef(({words, setWords}, ref) => {
 
             // 如果是純假名詞
             if (isKana(surface)) {
-                return [...surface].map((char, i) => {
-                    const accent = word.accent?.[i] ?? 0;
-                    let mark = '';
-                    if (accent === 1) mark = "<i>''''''''</i>";
-                    else if (accent === 2) mark = "<i>*''''''''*</i>";
-                    return `{${char}|${mark}}`;
-                }).join('');
+            return [...surface].map((char, i) => {
+                // 找對應字元的 accent
+                const furiganaChar = Array.isArray(word.furigana) ? word.furigana[i] : null;
+                const accent = furiganaChar?.accent ?? 0;
+
+                if (accent === 0) return char;
+                let mark = '';
+                if (accent === 1) mark = "<i>''''''''</i>";
+                else if (accent === 2) mark = "<i>*''''''''*</i>";
+
+                return `{${char}|${mark}}`;
+            }).join('');
             }
 
             // 漢字詞：將 furigana 處理成 markdown
@@ -38,6 +43,7 @@ const Result = forwardRef(({words, setWords}, ref) => {
                 : '';
 
             return `{${surface}|${furigana}}`;
+
         }).join('');
 
         navigator.clipboard.writeText(content).then(() => {
