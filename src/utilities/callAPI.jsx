@@ -2,7 +2,7 @@ import isKana from 'utilities/isKana.jsx';
 
 export async function fetchFuriganaFromAPI(text) {
     try {
-        const response = await fetch('https://fastapi-wd1i.onrender.com/api/MarkAccent/', {
+        const response = await fetch('https://api.mygo.page/api/MarkAccent/', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ text })
