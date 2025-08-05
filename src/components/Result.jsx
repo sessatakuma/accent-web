@@ -6,6 +6,7 @@ import isKana from 'utilities/isKana.jsx';
 
 import Kana from 'components/Kana.jsx';
 import 'components/Result.css';
+import { placeholder } from 'utilities/placeholder.jsx';
 
 const Result = forwardRef(({words, setWords}, ref) => {
     const [showCopyDescription, setShowCopyDescription] = useState(false); 
@@ -45,8 +46,6 @@ const Result = forwardRef(({words, setWords}, ref) => {
             return `{${surface}|${furigana}}`;
 
         }).join('').replace(/<\/b><b>/g, '');
-
-
 
         navigator.clipboard.writeText(content).then(() => {
             setShowCopyDescription(true);
@@ -98,8 +97,21 @@ const Result = forwardRef(({words, setWords}, ref) => {
 
     const updateFurigana = (wordIndex, textIndex, newFurigana, newAccent) => {
         let newWords = [...words];
-        newWords[wordIndex].furigana[textIndex].text = newFurigana;
-        newWords[wordIndex].furigana[textIndex].accent = +(newFurigana !== '\u00A0') * newAccent;
+        let deleting = newFurigana.length === 0;
+        if (deleting) {
+            if (newWords[wordIndex].furigana.length === 1) {
+                newWords[wordIndex].furigana[textIndex].text = placeholder;
+                newWords[wordIndex].furigana[textIndex].accent = 0;
+            }
+            else {
+                newWords[wordIndex].furigana.splice(textIndex, 1);
+                newWords[wordIndex].accent.splice(textIndex, 1);
+            }
+        }
+        else {
+            newWords[wordIndex].furigana[textIndex].text = newFurigana;
+            newWords[wordIndex].furigana[textIndex].accent = newAccent;
+        }
         setWords(newWords);
     }
 
@@ -112,7 +124,7 @@ const Result = forwardRef(({words, setWords}, ref) => {
                     <ruby key={`${wordIndex}-${word}`}>
                         {/* Kanji -> <span>, kana -> <Kana> (accent enabled) */}
                         {[...word.surface].map((char, charIndex) =>
-                            word.furigana.text ? 
+                            word.furigana.length ? 
                                 <span key={`${wordIndex}-${charIndex}`}>{char}</span> :
                                 <Kana 
                                     key={`${wordIndex}-${charIndex}`} 
