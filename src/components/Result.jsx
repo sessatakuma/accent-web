@@ -6,6 +6,8 @@ import isKana from 'utilities/isKana.jsx';
 
 import Kana from 'components/Kana.jsx';
 import 'components/Result.css';
+import { placeholder } from 'utilities/placeholder.jsx';
+import { splitKanaSyllables } from 'utilities/kanaUtils.jsx';
 
 const Result = forwardRef(({words, setWords}, ref) => {
     const [showCopyDescription, setShowCopyDescription] = useState(false); 
@@ -45,8 +47,6 @@ const Result = forwardRef(({words, setWords}, ref) => {
             return `{${surface}|${furigana}}`;
 
         }).join('').replace(/<\/b><b>/g, '');
-
-
 
         navigator.clipboard.writeText(content).then(() => {
             setShowCopyDescription(true);
@@ -98,8 +98,25 @@ const Result = forwardRef(({words, setWords}, ref) => {
 
     const updateFurigana = (wordIndex, textIndex, newFurigana, newAccent) => {
         let newWords = [...words];
-        newWords[wordIndex].furigana[textIndex].text = newFurigana;
-        newWords[wordIndex].furigana[textIndex].accent = +(newFurigana !== '\u00A0') * newAccent;
+        if (newFurigana === placeholder) { // 被刪空
+            if (newWords[wordIndex].furigana.length === 1) { //　要刪光了就放placeholder
+                newWords[wordIndex].furigana[textIndex].text = placeholder;
+                newWords[wordIndex].furigana[textIndex].accent = 0;
+            }
+            else // 不然刪掉
+                newWords[wordIndex].furigana.splice(textIndex, 1);
+        }
+        else if (splitKanaSyllables(newFurigana).length === 1) { // 音節長度還是1就直接更新
+            newWords[wordIndex].furigana[textIndex].text = newFurigana;
+            newWords[wordIndex].furigana[textIndex].accent = newAccent;
+        }
+        else { // 變長就把原本的刪掉把新的拆開丟進furigana
+            // newWords[wordIndex].furigana.splice(textIndex, 0, 
+            //     ...splitKanaSyllables(newFurigana).map(char => ({
+            //         text: char,
+            //         accent: 0
+            //     })));
+        }
         setWords(newWords);
     }
 
@@ -112,7 +129,7 @@ const Result = forwardRef(({words, setWords}, ref) => {
                     <ruby key={`${wordIndex}-${word}`}>
                         {/* Kanji -> <span>, kana -> <Kana> (accent enabled) */}
                         {[...word.surface].map((char, charIndex) =>
-                            word.furigana.text ? 
+                            word.furigana.length ? 
                                 <span key={`${wordIndex}-${charIndex}`}>{char}</span> :
                                 <Kana 
                                     key={`${wordIndex}-${charIndex}`} 
