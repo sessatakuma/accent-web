@@ -1,4 +1,5 @@
 import isKana from 'utilities/isKana.jsx';
+import { splitKanaSyllables } from 'utilities/kanaUtils.jsx';
 
 export async function fetchFuriganaFromAPI(text) {
     try {
@@ -13,12 +14,14 @@ export async function fetchFuriganaFromAPI(text) {
         if (response.ok && data.status === 200 && Array.isArray(data.result)) {
             return data.result.map(entry => {
                 const surface = entry.surface;
-                const furigana = entry.furigana;
+                const furigana = isKana(surface)
+                    ? splitKanaSyllables(surface).map(() => '\u00A0') // 每個音節用空白填
+                    : splitKanaSyllables(entry.furigana); // 漢字的 furigana 也要切音節
                 const accent = entry.accent
 
                 return {
                     surface,
-                    furigana: isKana(surface) ? [...surface].map(() => '\u00A0') : furigana, // kanji 才帶 furigana
+                    furigana, // kanji 才帶 furigana
                     accent
                 };
             });
