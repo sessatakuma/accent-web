@@ -72,6 +72,7 @@ export default function Run ({setWords, paragraph, resultRef}) {
                 }
             }));
         } else {
+            alert('サーバーからの応答がありませんでした。');
             setWords([...segmenter.segment(paragraph)].map(s => ({
                 surface: s.segment,
                 furigana: [{text: '', accent: 0}],
