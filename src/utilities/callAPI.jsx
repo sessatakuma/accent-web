@@ -13,16 +13,12 @@ export async function fetchFuriganaFromAPI(text) {
 
         if (response.ok && data.status === 200 && Array.isArray(data.result)) {
             return data.result.map(entry => {
-                const surface = entry.surface;
-                const furigana = isKana(surface)
-                    ? splitKanaSyllables(surface).map(() => '\u00A0') // 每個音節用空白填
-                    : splitKanaSyllables(entry.furigana); // 漢字的 furigana 也要切音節
-                const accent = entry.accent
-
                 return {
-                    surface,
-                    furigana, // kanji 才帶 furigana
-                    accent
+                    surface: entry.surface,
+                    furigana: isKana(surface) ? 
+                        '' :
+                        splitKanaSyllables(entry.furigana),
+                    accent: entry.accent,
                 };
             });
         } else {
