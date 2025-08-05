@@ -44,7 +44,9 @@ const Result = forwardRef(({words, setWords}, ref) => {
 
             return `{${surface}|${furigana}}`;
 
-        }).join('');
+        }).join('').replace(/<\/b><b>/g, '');
+
+
 
         navigator.clipboard.writeText(content).then(() => {
             setShowCopyDescription(true);
