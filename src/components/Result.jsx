@@ -17,18 +17,36 @@ const Result = forwardRef(({words, setWords}, ref) => {
         const content = words.map(word => {
             const surface = word.surface;
 
-            // no kanji
+            // 如果是純假名詞
             if (isKana(surface)) {
-                return surface;
+            return [...surface].map((char, i) => {
+                // 找對應字元的 accent
+                const furiganaChar = Array.isArray(word.furigana) ? word.furigana[i] : null;
+                const accent = furiganaChar?.accent ?? 0;
+
+                if (accent === 0) return char;
+                let mark = '';
+                if (accent === 1) mark = "<i>''''''''</i>";
+                else if (accent === 2) mark = "<i>*''''''''*</i>";
+
+                return `{${char}|${mark}}`;
+            }).join('');
             }
 
-            // kanji
+            // 漢字詞：將 furigana 處理成 markdown
             const furigana = Array.isArray(word.furigana)
-                ? word.furigana.map(f => f.text).join('')
+                ? word.furigana.map(f => {
+                    if (f.accent === 1) return `<b>${f.text}</b>`;
+                    if (f.accent === 2) return `<b>*${f.text}*</b>`;
+                    return f.text;
+                }).join('')
                 : '';
 
             return `{${surface}|${furigana}}`;
-        }).join('');
+
+        }).join('').replace(/<\/b><b>/g, '');
+
+
 
         navigator.clipboard.writeText(content).then(() => {
             setShowCopyDescription(true);

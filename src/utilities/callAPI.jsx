@@ -2,7 +2,7 @@ import isKana from 'utilities/isKana.jsx';
 
 export async function fetchFuriganaFromAPI(text) {
     try {
-        const response = await fetch('https://fastapi-wd1i.onrender.com/api/MarkAccent/', {
+        const response = await fetch('https://api.mygo.page/api/MarkAccent/', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ text })
@@ -18,7 +18,7 @@ export async function fetchFuriganaFromAPI(text) {
 
                 return {
                     surface,
-                    furigana: isKana(surface) ? '' : furigana, // kanji 才帶 furigana
+                    furigana: isKana(surface) ? [...surface].map(() => '\u00A0') : furigana, // kanji 才帶 furigana
                     accent
                 };
             });
