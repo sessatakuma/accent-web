@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-
+import { placeholder } from 'utilities/placeholder.jsx';
 // an inline element marked w/ accent, changes type on click 
 export default function Kana({ text, accent, onUpdate, editable = false}) {
     // if editable, set firstClick to true
@@ -24,12 +24,13 @@ export default function Kana({ text, accent, onUpdate, editable = false}) {
     const handleKeyDown = e => {
         if (e.key === 'Backspace') {
             if (e.target.innerText.length <= 1)
-                e.target.innerText = '\u00A0'; // leave a placeholder space
+                e.target.innerText = placeholder; 
+            // leave a placeholder space, this need to be handled here instead of Result.jsx, to prevent empty furigana causing weird mouse position
         }
         if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
             if (e.target.innerText.length == 0)
-                e.target.innerText = '\u00A0'; 
+                e.target.innerText = placeholder; 
             e.target.blur(); // trigger onBlur and save
         }
     };

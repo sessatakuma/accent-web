@@ -97,16 +97,14 @@ const Result = forwardRef(({words, setWords}, ref) => {
 
     const updateFurigana = (wordIndex, textIndex, newFurigana, newAccent) => {
         let newWords = [...words];
-        let deleting = newFurigana.length === 0;
+        let deleting = newFurigana === placeholder;
         if (deleting) {
-            if (newWords[wordIndex].furigana.length === 1) {
+            if (newWords[wordIndex].furigana.length === 1) { //　要刪光了就放placeholder
                 newWords[wordIndex].furigana[textIndex].text = placeholder;
                 newWords[wordIndex].furigana[textIndex].accent = 0;
             }
-            else {
+            else // 不然刪掉
                 newWords[wordIndex].furigana.splice(textIndex, 1);
-                newWords[wordIndex].accent.splice(textIndex, 1);
-            }
         }
         else {
             newWords[wordIndex].furigana[textIndex].text = newFurigana;
