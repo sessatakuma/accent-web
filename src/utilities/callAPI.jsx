@@ -18,7 +18,7 @@ export async function fetchFuriganaFromAPI(text) {
 
                 return {
                     surface,
-                    furigana: isKana(surface) ? '' : furigana, // kanji 才帶 furigana
+                    furigana: isKana(surface) ? [...surface].map(() => '\u00A0') : furigana, // kanji 才帶 furigana
                     accent
                 };
             });
