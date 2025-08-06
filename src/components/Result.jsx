@@ -6,8 +6,6 @@ import isKana from 'utilities/isKana.jsx';
 
 import Kana from 'components/Kana.jsx';
 import 'components/Result.css';
-import { placeholder } from 'utilities/placeholder.jsx';
-import { splitKanaSyllables } from 'utilities/kanaUtils.jsx';
 
 const Result = forwardRef(({words, setWords}, ref) => {
     const [showCopyDescription, setShowCopyDescription] = useState(false); 
@@ -21,32 +19,30 @@ const Result = forwardRef(({words, setWords}, ref) => {
 
             // 如果是純假名詞
             if (isKana(surface)) {
-            return [...surface].map((char, i) => {
-                // 找對應字元的 accent
-                const furiganaChar = Array.isArray(word.furigana) ? word.furigana[i] : null;
-                const accent = furiganaChar?.accent ?? 0;
+                const furiganaArray = Array.isArray(word.furigana) ? word.furigana : [];
+                return [...surface].map((char, i) => {
+                    const accent = furiganaArray[i]?.accent ?? word.accent?.[i] ?? 0;
 
-                if (accent === 0) return char;
-                let mark = '';
-                if (accent === 1) mark = "<i>''''''''</i>";
-                else if (accent === 2) mark = "<i>*''''''''*</i>";
-
-                return `{${char}|${mark}}`;
-            }).join('');
+                    if (accent === 1) return `<i>${char}</i>`;
+                    if (accent === 2) return `<b>${char}</b>`;
+                    return char;
+                }).join('');
             }
 
             // 漢字詞：將 furigana 處理成 markdown
             const furigana = Array.isArray(word.furigana)
                 ? word.furigana.map(f => {
-                    if (f.accent === 1) return `<b>${f.text}</b>`;
-                    if (f.accent === 2) return `<b>*${f.text}*</b>`;
+                    if (f.accent === 1) return `<i>${f.text}</i>`;
+                    if (f.accent === 2) return `<b>${f.text}</b>`;
                     return f.text;
                 }).join('')
                 : '';
 
             return `{${surface}|${furigana}}`;
 
-        }).join('').replace(/<\/b><b>/g, '');
+        }).join('').replace(/<\/b><b>/g, '').replace(/<\/i><i>/g, '');
+
+
 
         navigator.clipboard.writeText(content).then(() => {
             setShowCopyDescription(true);
@@ -98,25 +94,8 @@ const Result = forwardRef(({words, setWords}, ref) => {
 
     const updateFurigana = (wordIndex, textIndex, newFurigana, newAccent) => {
         let newWords = [...words];
-        if (newFurigana === placeholder) { // 被刪空
-            if (newWords[wordIndex].furigana.length === 1) { //　要刪光了就放placeholder
-                newWords[wordIndex].furigana[textIndex].text = placeholder;
-                newWords[wordIndex].furigana[textIndex].accent = 0;
-            }
-            else // 不然刪掉
-                newWords[wordIndex].furigana.splice(textIndex, 1);
-        }
-        else if (splitKanaSyllables(newFurigana).length === 1) { // 音節長度還是1就直接更新
-            newWords[wordIndex].furigana[textIndex].text = newFurigana;
-            newWords[wordIndex].furigana[textIndex].accent = newAccent;
-        }
-        else { // 變長就把原本的刪掉把新的拆開丟進furigana
-            // newWords[wordIndex].furigana.splice(textIndex, 0, 
-            //     ...splitKanaSyllables(newFurigana).map(char => ({
-            //         text: char,
-            //         accent: 0
-            //     })));
-        }
+        newWords[wordIndex].furigana[textIndex].text = newFurigana;
+        newWords[wordIndex].furigana[textIndex].accent = +(newFurigana !== '\u00A0') * newAccent;
         setWords(newWords);
     }
 
@@ -129,7 +108,7 @@ const Result = forwardRef(({words, setWords}, ref) => {
                     <ruby key={`${wordIndex}-${word}`}>
                         {/* Kanji -> <span>, kana -> <Kana> (accent enabled) */}
                         {[...word.surface].map((char, charIndex) =>
-                            word.furigana.length ? 
+                            word.furigana.text ? 
                                 <span key={`${wordIndex}-${charIndex}`}>{char}</span> :
                                 <Kana 
                                     key={`${wordIndex}-${charIndex}`} 
