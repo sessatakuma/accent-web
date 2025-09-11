@@ -10,31 +10,6 @@ export default function Run ({setWords, paragraph, resultRef}) {
     // Using Intl.Segmenter to segment Japanese text into words
     const segmenter = new Intl.Segmenter('ja', { granularity: 'word' });
 
-    const calcAccent = (newWords, wordIndex, charIndex, wordSurface, wordAccent) => {
-        const monosyllabic = (wordSurface.length === 1);
-        const prevAccent = wordIndex > 0 ? newWords[wordIndex - 1].accent : -1;
-        const caseParticles = ['は', 'が', 'を', 'に', 'で', 'と', 'へ', 'から', 'まで', 'より'];
-        const isParticle = (word) => caseParticles.includes(word);
-        const afterParticle = wordIndex > 0 && isParticle(newWords[wordIndex - 1].surface);
-
-        const isDrop = (charIndex + 1 === wordAccent);
-        if (wordAccent === -1)
-            return 0;
-        if (wordAccent === 0) { 
-            if (charIndex > 0)  // 0號音不是第一音節都是accent 1(高)
-                return 1;
-            if (monosyllabic)   // 單音節的0號音第一音節也是accent 1
-                return 1;
-            if (prevAccent === 0) { // 接續0號音
-                if (afterParticle) // 除非在助詞後面
-                    return 0; 
-                return 1;
-            } 
-            return 0;
-        }
-        return isDrop ? 2 : 0;
-    }
-
     // On input change, update the paragraph and segment it into words
     const updateResult = async (e) => {
         if (progress > 0) 
@@ -60,14 +35,13 @@ export default function Run ({setWords, paragraph, resultRef}) {
                 const isEmpty = (word.furigana.length == 0);
                 return {
                     surface: word.surface,
-                    furigana: [...word.furigana].map((f, i) => ({
-                        text:  f,
-                        accent: calcAccent(newWords, wordIndex, i, word.surface, word.accent)
+                    furigana: [...word.accent].map((a, i) => ({
+                        text:  a.furigana,
+                        accent: a.accent_marking_type
                     })),
                     accent: isEmpty ? 
-                        [...word.surface].map((c, i) => 
-                            calcAccent(newWords, wordIndex, i, word.surface, word.accent)
-                        ) : 
+                        [...word.accent].map((a, i) => 
+                            a.accent_marking_type) : 
                         0 // 漢字本身沒音調
                 }
             }));
