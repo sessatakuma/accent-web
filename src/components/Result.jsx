@@ -141,14 +141,14 @@ const Result = forwardRef(({words, setWords}, ref) => {
                         {/* If there is furigana, display it in rt and make it editable */}
                         <rt>
                             {[...word.furigana].map((char, charIndex) => 
-                                <Kana
-                                    key={`${wordIndex}-${charIndex}`} 
-                                    editable
-                                    text={char.text} 
-                                    accent={char.accent}
-                                    onUpdate={(newFurigana, newAccent) => 
-                                        updateFurigana(wordIndex, charIndex, newFurigana, newAccent)}
-                                />
+                                    <Kana
+                                        key={`${wordIndex}-${charIndex}`} 
+                                        editable
+                                        text={/^[\u3040-\u309Fー]+$/.test(word.surface) ? "" : char.text} 
+                                        accent={/^[\u3040-\u309Fー]+$/.test(word.surface) ? 0 :char.accent}
+                                        onUpdate={(newFurigana, newAccent) => 
+                                            updateFurigana(wordIndex, charIndex, newFurigana, newAccent)}
+                                    />
                             )}
                         </rt>
                     </ruby>
