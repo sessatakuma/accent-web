@@ -144,8 +144,8 @@ const Result = forwardRef(({words, setWords}, ref) => {
                                     <Kana
                                         key={`${wordIndex}-${charIndex}`} 
                                         editable
-                                        text={/^[\u3040-\u309Fー]+$/.test(word.surface) ? "" : char.text} 
-                                        accent={/^[\u3040-\u309Fー]+$/.test(word.surface) ? 0 :char.accent}
+                                        text={isKana(word.surface) ? "" : char.text} 
+                                        accent={isKana(word.surface) ? 0 :char.accent}
                                         onUpdate={(newFurigana, newAccent) => 
                                             updateFurigana(wordIndex, charIndex, newFurigana, newAccent)}
                                     />
