@@ -1,0 +1,159 @@
+name: 'Format Checker'
+on:
+  pull_request:
+    types:
+      - opened
+      - edited
+      - reopened
+      - synchronize
+jobs:
+  check-for-format:
+    name: 'Check Format'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          ref: ${{ github.head_ref }}
+
+      - name: Get PR Commits
+        id: 'get-pr-commits'
+        uses: tim-actions/get-pr-commits@master
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+     
+      - name: Check Subject Line Length
+        uses: tim-actions/commit-message-checker-with-regex@v0.3.1
+        with:
+          commits: ${{ steps.get-pr-commits.outputs.commits }}
+          pattern: '^.{0,75}(\n.*)*$'
+          error: |
+            ❌ Commit subject line is too long (max 75 characters)
+            
+            Examples:
+              ✅ fix: resolve authentication bug in login module
+              ❌ fix: this is a very long commit message that exceeds the maximum length limit of seventy five characters
+     
+      - name: Check Body Line Length
+        if: ${{ success() || failure() }}
+        uses: tim-actions/commit-message-checker-with-regex@v0.3.1
+        with:
+          commits: ${{ steps.get-pr-commits.outputs.commits }}
+          pattern: '^.+(\n.{0,75})*$'
+          error: |
+            ❌ Commit body line is too long (max 75 characters per line)
+            
+            Tip: Break long lines into multiple shorter lines
+            
+            Examples:
+              ✅ This change updates the authentication logic
+                 to support OAuth2 tokens properly.
+              ❌ This change updates the authentication logic to support OAuth2 tokens properly and fixes several edge cases.
+     
+      - name: Check Commit Title Format
+        if: ${{ success() || failure() }}
+        uses: tim-actions/commit-message-checker-with-regex@v0.3.1
+        with:
+          commits: ${{ steps.get-pr-commits.outputs.commits }}
+          pattern: '^[a-z]+(\s*\([^)]+\))?\s*:\s+[a-z]'
+          error: |
+            ❌ Commit title format is incorrect!
+            
+            Required format: "type: title" or "type (scope): title"
+            Rules:
+              - type must be lowercase (e.g., fix, feat, docs, chore)
+              - title must start with lowercase letter
+              - must have a space after the colon
+            
+            Examples:
+              ✅ fix: resolve login bug
+              ✅ feat: add user dashboard
+              ✅ feat (api): add new endpoint
+              ✅ docs (readme): update installation guide
+              ❌ Fix: resolve login bug (type should be lowercase)
+              ❌ fix: Resolve login bug (title should start with lowercase)
+              ❌ fix:resolve login bug (missing space after colon)
+
+      - name: Check Branch Name Format
+        if: ${{ success() || failure() }}
+        run: |
+          BRANCH_NAME="${{ github.head_ref }}"
+          if ! echo "$BRANCH_NAME" | grep -qE '^[a-z]+(-[a-z]+)*/'; then
+            echo "❌ Branch name format is incorrect!"
+            echo ""
+            echo "Required format: 'type/description'"
+            echo "Rules:"
+            echo "  - type must be lowercase"
+            echo "  - use hyphens to separate words in description"
+            echo ""
+            echo "Current branch: $BRANCH_NAME"
+            echo ""
+            echo "Examples:"
+            echo "  ✅ fix/login-bug"
+            echo "  ✅ feat/user-dashboard"
+            echo "  ✅ bug-fix/authentication-issue"
+            echo "  ❌ Fix/login-bug (type should be lowercase)"
+            echo "  ❌ fix-login-bug (missing '/' separator)"
+            exit 1
+          fi
+          echo "✅ Branch name format is correct: $BRANCH_NAME"
+
+      - name: Check PR Title Format
+        if: ${{ success() || failure() }}
+        run: |
+          PR_TITLE="${{ github.event.pull_request.title }}"
+          if ! echo "$PR_TITLE" | grep -qE '^[a-z]+(\s*\([^)]+\))?\s*:\s+[a-z]'; then
+            echo "❌ PR title format is incorrect!"
+            echo ""
+            echo "Required format: 'type: title' or 'type (scope): title'"
+            echo "Rules:"
+            echo "  - type must be lowercase (e.g., fix, feat, docs, chore)"
+            echo "  - title must start with lowercase letter"
+            echo "  - must have a space after the colon"
+            echo ""
+            echo "Current PR title: $PR_TITLE"
+            echo ""
+            echo "Examples:"
+            echo "  ✅ fix: resolve login bug"
+            echo "  ✅ feat: add user dashboard"
+            echo "  ✅ feat (api): add new endpoint"
+            echo "  ✅ docs (readme): update installation guide"
+            echo "  ❌ Fix: resolve login bug (type should be lowercase)"
+            echo "  ❌ fix: Resolve login bug (title should start with lowercase)"
+            echo "  ❌ fix:resolve login bug (missing space after colon)"
+            exit 1
+          fi
+          echo "✅ PR title format is correct: $PR_TITLE"
+
+      - name: Check for Unresolved Merge Conflicts
+        if: ${{ success() || failure() }}
+        run: |
+          echo "Checking for unresolved merge conflicts..."
+          
+          # Search for merge conflict markers
+          CONFLICTS=$(git grep -n -E '^(<{7}|={7}|>{7})' 2>/dev/null || true)
+          
+          if [ -n "$CONFLICTS" ]; then
+            echo "❌ Unresolved merge conflicts found!"
+            echo ""
+            echo "Please resolve the following conflicts before merging:"
+            echo ""
+            echo "$CONFLICTS" | awk -F: '{print "  📁 File: " $1 ", Line: " $2}'
+            echo ""
+            echo "Look for these markers in your code:"
+            echo "  <<<<<<< HEAD"
+            echo "  (your changes)"
+            echo "  ======="
+            echo "  (incoming changes)"
+            echo "  >>>>>>> branch-name"
+            echo ""
+            echo "To resolve:"
+            echo "  1. Open the conflicting files"
+            echo "  2. Choose which changes to keep"
+            echo "  3. Remove the conflict markers"
+            echo "  4. Commit the resolved changes"
+            exit 1
+          else
+            echo "✅ No unresolved merge conflicts found"
+          fi
