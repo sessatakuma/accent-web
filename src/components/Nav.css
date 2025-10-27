@@ -31,26 +31,3 @@
         height: 5vh;
     }
 }
-
-.nav .nav-buttons {
-    display: flex;
-    gap: 1rem;
-
-    & button {
-        background-color: var(--color-secondary);
-        color: var(--color-primary);
-        border: none;
-        width: 4vh;
-        height: 4vh;
-        font-size: clamp(.2rem, .2rem + 2vh, 1rem);
-        display: grid;
-        place-items: center;
-        border-radius: 50%;
-        cursor: pointer;
-        transition: background-color .2s ease;
-
-        &:hover {
-            background-color: color-mix(in hsl, var(--color-secondary), #000 5%);
-        }
-    }
-}
