@@ -1,0 +1,30 @@
+name: PR Quality Checks
+
+on:
+  pull_request:
+    branches: [ "main" ]
+    types:
+      - opened
+      - edited
+      - reopened
+      - synchronize
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+  checks: write
+
+jobs:
+  quality-checks:
+    name: Run Organization Quality Checks
+    uses: sessatakuma/org-workflows/.github/workflows/entrypoint.yml@main
+    secrets:
+      CHECKER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    with:
+      # Basic PR Quality Checks (enabled by default)
+      run-basic-checks: true
+
+      # Configuration Files Quality Checks (optional - uncomment to enable)
+      # Checks YAML, JSON, and TOML files for syntax errors
+      # run-config-checks: true
