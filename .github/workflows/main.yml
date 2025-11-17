@@ -25,6 +25,15 @@ jobs:
       # Basic PR Quality Checks (enabled by default)
       run-basic-checks: true
 
-      # Configuration Files Quality Checks (optional - uncomment to enable)
+      # Python Code Quality Checks (optional)
+      # Requires: pyproject.toml with ruff and mypy configured
+      run-python-checks: false
+      python-version: '3.11'
+
+      # Configuration Files Quality Checks (optional)
       # Checks YAML, JSON, and TOML files for syntax errors
-      # run-config-checks: true
+      run-config-checks: true
+
+      # Frontend Code Quality Checks (optional)
+      # Requires: Node.js project with Prettier configured
+      run-frontend-checks: true
