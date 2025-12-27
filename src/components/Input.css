@@ -19,10 +19,9 @@
     /* min-height removed, will rely on flex */
     flex: 1; /* Fill remaining space */
     padding: 1.5rem;
-    background-color: var(--color-bg-secondary);
-    border: 1px solid var(--color-border);
+    background-color: transparent;
+    border: none;
     border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-soft);
     font-size: 1.5rem;
     line-height: 1.6; /* Adjusted for textarea */
     color: var(--color-text-primary);
@@ -33,9 +32,9 @@
 }
 
 .input-area:focus {
-    border-color: var(--color-accent-green);
-    box-shadow: 0 0 0 3px var(--color-accent-green-light);
+    /* No border change on focus since we want unified look */
 }
+
 
 .input-area::placeholder {
     color: var(--color-text-secondary);

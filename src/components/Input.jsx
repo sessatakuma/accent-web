@@ -3,13 +3,6 @@ import { Dices } from 'lucide-react';
 import 'components/Input.css';
 
 export default function Input({paragraph, setParagraph}) {
-    const handleKeyDown = e => {
-        if (e.key === 'Enter' && !e.shiftKey) {
-            e.preventDefault();
-            e.target.blur(); // trigger onBlur and save
-        }
-    }
-
     const generateRandomParagraph = () => {
         const examples = [
             "今日は朝から猫がベランダで日向ぼっこしていたので、つい一緒にゴロゴロしてしまった。",
@@ -35,3 +28,4 @@ export default function Input({paragraph, setParagraph}) {
         </section>
     );
 }
+
