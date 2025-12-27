@@ -5,7 +5,7 @@ import Input from 'components/Input.jsx';
 import Run from 'components/Run.jsx';
 import Result from 'components/Result.jsx';
 import ToTop from 'components/ToTop.jsx';
-import Footer from 'components/Footer.jsx';
+
 
 import 'components/Main.css';
 import 'utilities/accentMarker.css';
@@ -45,7 +45,6 @@ export default function Main() {
             </main>
 
             <ToTop />
-            <Footer />
         </div>
     );
 }
