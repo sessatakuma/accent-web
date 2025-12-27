@@ -4,11 +4,10 @@
     "description": "A tool for Japanese furigana and accent marking",
     "main": "src/index.jsx",
     "scripts": {
-        "build": "webpack -p",
-        "watch": "webpack -w",
-        "start": "webpack-dev-server",
-        "deploy": "ngrok http 8080 --host-header=\"localhost:8080\"",
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "build": "webpack --mode production",
+        "watch": "webpack --watch --mode development",
+        "dev": "webpack serve --mode development --open",
+        "deploy": "ngrok http 8080 --host-header=\"localhost:8080\""
     },
     "keywords": [],
     "author": "",
@@ -16,15 +15,14 @@
     "dependencies": {
         "@types/react-transition-group": "^4.4.12",
         "axios": "^1.12.2",
-        "bootstrap": "^5.3.8",
         "html-to-image": "^1.11.13",
         "html2canvas": "^1.4.1",
         "jspdf": "^3.0.3",
+        "lucide-react": "^0.562.0",
         "prop-types": "^15.8.1",
         "react": "^19.2.0",
         "react-dom": "^19.2.0",
-        "react-router-dom": "^7.9.4",
-        "reactstrap": "^9.2.3"
+        "react-router-dom": "^7.9.4"
     },
     "devDependencies": {
         "@babel/core": "^7.28.5",
