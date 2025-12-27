@@ -1,12 +1,12 @@
-import React, {useEffect} from "react";
-
+import React, { useEffect, useState } from "react";
+import { ArrowUp } from 'lucide-react';
 import 'components/ToTop.css';
 
 export default function ToTop() {
-    const [hidden, setHidden] = React.useState(true);
+    const [hidden, setHidden] = useState(true);
 
     const handleScroll = () => {
-        setHidden(window.scrollY == 0);
+        setHidden(window.scrollY === 0);
     }
     
     useEffect(() => {
@@ -16,12 +16,17 @@ export default function ToTop() {
         };
     }, []);
 
+    const scrollToTop = () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
     return (
-        <button className={`to-top ${hidden ? 'hidden' : ''}`} onClick={() => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }}>
-            <i className="fa-solid fa-caret-up" />
+        <button 
+            className={`to-top ${hidden ? 'hidden' : ''}`} 
+            onClick={scrollToTop}
+            aria-label="トップへ戻る"
+        >
+            <ArrowUp size={24} />
         </button>
     );
 }
-    
