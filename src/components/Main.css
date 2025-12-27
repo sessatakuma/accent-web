@@ -45,7 +45,7 @@
 }
 
 .result-panel {
-    padding: 1.5rem;
+    padding: 0;
 }
 
 .input-panel:focus-within {

@@ -112,7 +112,7 @@ const Result = forwardRef(({words, setWords, isLoading}, ref) => {
     } else if (!words || words.length === 0) {
         content = (
             <div className="empty-state">
-                <p>実行して結果を表示</p>
+                <p>結果</p>
             </div>
         );
     } else {
