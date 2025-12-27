@@ -1,4 +1,4 @@
-import React, { useState, forwardRef } from 'react';
+import React, { useState, useEffect, forwardRef } from 'react';
 import { toPng } from 'html-to-image';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas'; 
