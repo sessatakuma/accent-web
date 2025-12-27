@@ -15,8 +15,7 @@ module.exports = {
         }
     },
     entry: {
-        index: './index.jsx',
-        vendor: ['react', 'react-dom']
+        index: './index.jsx'
     },
     output: {
         path: distPath,
@@ -72,10 +71,20 @@ module.exports = {
         }
     },
     devServer: {
-        contentBase: distPath,
+        static: {
+            directory: distPath,
+        },
         compress: true,
         port: 8080,
-        historyApiFallback: true
+        historyApiFallback: true,
+        proxy: [
+            {
+                context: ['/api'],
+                target: 'https://sessa.onrender.com',
+                changeOrigin: true,
+                secure: false,      
+            },
+        ],
     },
     devtool: 'source-map'
 };
