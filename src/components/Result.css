@@ -2,6 +2,7 @@
     display: flex;
     flex-direction: column;
     height: 100%;
+    padding: 1.5rem;
 }
 
 /* .result-header removed */
@@ -54,16 +55,25 @@
     flex: 1;
     overflow-y: auto;
     position: relative;
-    padding: 0.5rem;
+    padding: 0;
 }
 
 .empty-state {
     display: flex;
-    justify-content: center;
-    align-items: center;
+    justify-content: flex-start; /* Align to top-left like textarea */
+    align-items: flex-start;
     height: 100%;
     color: var(--color-text-secondary);
-    font-style: italic;
+    font-size: 1.5rem; /* Match input size */
+    opacity: 0.6; /* Match input placeholder opacity */
+    padding: 0; 
+}
+
+.empty-state p {
+    font-size: 1.5rem;
+    margin: 0;
+    color: inherit;
+    line-height: 1.6;
 }
 
 .result-area {
