@@ -1,4 +1,5 @@
-import React from "react";
+import React from 'react';
+import { Dices } from 'lucide-react';
 import 'components/Input.css';
 
 export default function Input({paragraph, setParagraph}) {
@@ -22,19 +23,14 @@ export default function Input({paragraph, setParagraph}) {
 
     return (
         <section className='input-section'>
-            <h3 className='input-description'>アクセントをつけたい文章を入力</h3>
-            <p
+            <textarea
                 className='input-area'
-                contentEditable
-                suppressContentEditableWarning
-                onBlur={(e) => {setParagraph(e.target.innerText.trim());}}
-                onKeyDown={handleKeyDown}
-                data-placeholder=""
-                >
-                {paragraph}
-            </p>
-            <button className='generate-button' onClick={generateRandomParagraph}>
-                <i className="fa fa-dice" />
+                value={paragraph}
+                onChange={(e) => setParagraph(e.target.value)}
+                placeholder="文章を入力..."
+            />
+            <button className='generate-button' onClick={generateRandomParagraph} title="ランダムな文章を生成">
+                <Dices size={20} />
             </button>
         </section>
     );

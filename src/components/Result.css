@@ -1,130 +1,119 @@
-.result-section {
-    position: relative;
-    width: clamp(10rem, 10rem + 40vw, 32rem);
-    height: 90vh;
+.result-container-inner {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    padding-top: 10vh;
+    height: 100%;
 }
 
-.result-section .result-description {
-    text-align: center;
-    position: absolute;
-    pointer-events: none;
-    top: 5vh;
-    color: var(--color-primary);
-    font-size: clamp(.8rem, .8rem + 2vw, 2rem);
-}
+/* .result-header removed */
 
-.result-section .result-area {
-    width: clamp(10rem, 10rem + 40vw, 32rem);
-    height: 60vh;
-    padding: 1rem;
-    overflow-y: auto;
+/* .result-title removed */
 
-    background-color: var(--color-primary);
-    color: var(--color-secondary);
-    user-select: none;
-    line-height: 2.5;
-}
-
-.result-section:has(.dark) .result-area {
-    background-color: #fff;
-    color: #000;
-}
-
-.result-section .kana {
-    cursor: pointer;
-}
-
-.result-section .furigana {
-    all: unset;
-    display: inline;
-
-    text-align: center;
-    cursor: pointer;
-
-    &:focus {
-        cursor: text;
-        background-color: #0002;
-    }
-}
-
-.result-section .color-button {
-    position: absolute;
-    width: 2rem;
-    height: 2rem;
-    right: .5rem;
-    bottom: calc(20vh + .5rem);
-
-    color: #ddd;
-    background-color: #444;
-    border-radius: 50%;
-    cursor: pointer;
-    
-    &:hover {
-        scale: 1.1;
-        transition: scale .2s ease;
-    }
-    &.dark {
-        color: var(--color-primary);
-        background-color: var(--color-secondary);
-    }
-}
-
-.result-section .result-buttons {
+.result-actions {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    margin-top: auto; /* Push to bottom */
+    padding-top: 1rem; /* Some breathing room from content */
+}
+
+.export-group {
+    display: flex;
+    gap: 0.5rem;
+    padding-left: 0.5rem;
+    margin-left: 0.5rem;
+    border-left: 1px solid var(--color-border);
     align-items: center;
-    width: 100%;
-    padding-right: .5rem;
 }
 
-.result-section .result-buttons button {
-    width: 4rem;
-    height: 2rem;
-    background-color: var(--color-accent);
-    color: var(--color-primary);
+.action-button {
+    background-color: transparent;
     border: none;
-    border-radius: .5rem;
-    cursor: pointer;
-    transition: background-color .2s ease;
-
-    &:hover {
-        background-color: color-mix(in hsl, var(--color-accent), #000 5%);
-    }
-
-    &.copy-button {
-        height: 3rem;
-    }
+    color: var(--color-text-secondary);
+    padding: 0.5rem 0.75rem;
+    border-radius: var(--radius-md);
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-weight: 500;
+    font-size: 0.9rem;
 }
 
-.result-section .share-buttons {
+.action-button:hover {
+    background-color: var(--color-bg-primary);
+    color: var(--color-text-primary);
+}
+
+.theme-toggle.active {
+    color: var(--color-accent-green);
+    background-color: var(--color-accent-green-light);
+}
+
+.result-content {
+    flex: 1;
+    overflow-y: auto;
+    position: relative;
+    padding: 0.5rem;
+}
+
+.empty-state {
     display: flex;
     justify-content: center;
     align-items: center;
-    color: var(--color-primary);
-    gap: .5rem;
-    outline: var(--color-primary) solid .1rem;
-    outline-offset: .5rem;
-    border-radius: .5rem;
+    height: 100%;
+    color: var(--color-text-secondary);
+    font-style: italic;
 }
 
-.result-section .download {
-    color: var(--color-primary);
-    height: 2rem;
-    position: absolute;
-    right: 10.5rem;
-    display: flex;
-    align-items: center;
+.result-area {
+    font-size: 1.5rem;
+    line-height: 2;
+    color: var(--color-text-primary);
+    padding: 1rem; /* Consistent padding for both themes */
+    border-radius: var(--radius-md);
+    transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-.result-section .copy-description {
-    color: var(--color-primary);
-    left: 5rem;
+/* Ruby Styling */
+ruby {
+    /* Standard ruby display */
+    display: inline-block; /* Fallback */
+    display: ruby;
+    margin: 0 0.1em;
+}
+
+rt {
+    font-size: 0.6em;
+    line-height: 1.2;
+    user-select: none;
+    text-align: center;
+    color: var(--color-text-secondary); /* Milder color */
+}
+
+.dark-theme .result-area {
+    background-color: #1F2937;
+    color: #F9FAFB;
+    /* Removed padding to prevent layout shift - padding should be on base class if needed, or consistent */
+}
+
+.toast-notification {
     position: absolute;
-    background-color: #fff5;
-    padding: .5rem 1.5rem;
-    transition: opacity .1s;
+    top: 4rem;
+    right: 1rem;
+    background-color: var(--color-accent-green);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-md);
+    font-size: 0.875rem;
+    box-shadow: var(--shadow-hover);
+    animation: fadeInOut 2s ease forwards;
+    z-index: 10;
+}
+
+@keyframes fadeInOut {
+    0% { opacity: 0; transform: translateY(-10px); }
+    10% { opacity: 1; transform: translateY(0); }
+    90% { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(-10px); }
 }
