@@ -23,7 +23,7 @@
     border: none;
     border-radius: var(--radius-lg);
     font-size: 1.5rem;
-    line-height: 1.6; /* Adjusted for textarea */
+    line-height: 2; /* Match Result panel for alignment */
     color: var(--color-text-primary);
     outline: none;
     transition: all 0.2s ease;
