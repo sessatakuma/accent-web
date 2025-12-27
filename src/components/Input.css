@@ -1,73 +1,69 @@
 .input-section {
-    position: relative;
     width: 100%;
-    height: 80vh;
-    padding: 0 2rem;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding-top: 20vh;
-}
-
-.input-section .input-description {
-    text-align: center;
-    position: absolute;
-    pointer-events: none;
-    top: 15vh;
-    font-size: clamp(.8rem, .8rem + 2vw, 2rem);
-    color: var(--color-primary);
-}
-
-.input-section .input-area {
-    all: unset;
-    display: block;
-    box-sizing: border-box;
-
+    gap: 1rem;
     position: relative;
-    width: clamp(10rem, 10rem + 40vw, 32rem);
-    height: 60vh;
-    padding: 1rem;
-    overflow-y: auto;
-    
-    background-color: var(--color-primary);
-    color: var(--color-secondary);
-    cursor: pointer;
-    
-    &:focus {
-        cursor: text;
-        background-color: color-mix(in hsl, var(--color-primary), #000 5%);;
-    }
-    &:empty:not(:focus)::before {
-      content: attr(data-placeholder);
-      pointer-events: none;
-      display: block;
-      opacity: .8;
-    }
+    flex: 1; /* Take up available space in panel */
 }
 
-.input-section .generate-button {
-    width: 4rem;
-    height: 4rem;
-    background-color: #0000;
-    color: var(--color-secondary);
-    cursor: pointer;
-    border-radius: 50%;
-    transition: scale .2s ease;
+.input-description {
+    font-size: 1rem;
+    color: var(--color-text-secondary);
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+.input-area {
+    width: 100%;
+    /* min-height removed, will rely on flex */
+    flex: 1; /* Fill remaining space */
+    padding: 1.5rem;
+    background-color: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-soft);
+    font-size: 1.5rem;
+    line-height: 1.6; /* Adjusted for textarea */
+    color: var(--color-text-primary);
+    outline: none;
+    transition: all 0.2s ease;
+    resize: none; 
+    font-family: inherit; /* Ensure font matches */
+}
+
+.input-area:focus {
+    border-color: var(--color-accent-green);
+    box-shadow: 0 0 0 3px var(--color-accent-green-light);
+}
+
+.input-area::placeholder {
+    color: var(--color-text-secondary);
+    opacity: 0.6;
+}
+
+.generate-button {
     position: absolute;
-    right: clamp(50vw - 16rem, 30vw - 5rem, 50vw - 5rem);;
-    bottom: 0;
-    font-size: 1.6rem;
-    &:hover {
-        scale: 1.1;
-        animation: wiggle .5s linear 1;
-    }
+    right: 1rem;
+    top: 1rem; /* Move inside or near the area */
+    /* Or maybe bottom right of the area? */
+    bottom: 1rem;
+    top: auto;
+    
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    background-color: var(--color-bg-primary);
+    color: var(--color-text-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--color-border);
+    transition: all 0.2s ease;
 }
 
-@keyframes wiggle {
-    0% { transform: rotate(0deg); }
-    25% { transform: rotate(10deg); }
-    50% { transform: rotate(-10deg); }
-    75% { transform: rotate(5deg); }
-    100% { transform: rotate(0deg); }
+.generate-button:hover {
+    background-color: var(--color-accent-green-light);
+    color: var(--color-accent-green);
+    transform: rotate(15deg);
 }

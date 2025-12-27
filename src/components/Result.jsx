@@ -1,38 +1,37 @@
 import React, { useState, forwardRef } from 'react';
 import { toPng } from 'html-to-image';
 import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
+import html2canvas from 'html2canvas'; 
+import { Copy, Image as ImageIcon, FileText, Palette } from 'lucide-react';
 
 import isKana from 'utilities/isKana.jsx';
 import { placeholder } from 'utilities/placeholder.jsx';
 import { splitKanaSyllables } from 'utilities/kanaUtils.jsx';
 
 import Kana from 'components/Kana.jsx';
+import SkeletonLoader from 'components/SkeletonLoader.jsx';
 import 'components/Result.css';
 
-const Result = forwardRef(({words, setWords}, ref) => {
+const Result = forwardRef(({words, setWords, isLoading}, ref) => {
     const [showCopyDescription, setShowCopyDescription] = useState(false); 
     const [theme, setTheme] = useState(0); 
 
     const resultRef = React.useRef(null);
     
     const copyResult = () => {
+        if (!words || words.length === 0) return;
+        
         const content = words.map(word => {
             const surface = word.surface;
-
-            // 如果是純假名詞
             if (isKana(surface)) {
                 const furiganaArray = Array.isArray(word.furigana) ? word.furigana : [];
                 return [...surface].map((char, i) => {
                     const accent = furiganaArray[i]?.accent ?? word.accent?.[i] ?? 0;
-
                     if (accent === 1) return `<i>${char}</i>`;
                     if (accent === 2) return `<b>${char}</b>`;
                     return char;
                 }).join('');
             }
-
-            // 漢字詞：將 furigana 處理成 markdown
             const furigana = Array.isArray(word.furigana)
                 ? word.furigana.map(f => {
                     if (f.accent === 1) return `<i>${f.text}</i>`;
@@ -40,26 +39,21 @@ const Result = forwardRef(({words, setWords}, ref) => {
                     return f.text;
                 }).join('')
                 : '';
-
             return `{${surface}|${furigana}}`;
-
         }).join('').replace(/<\/b><b>/g, '').replace(/<\/i><i>/g, '');
-
-
 
         navigator.clipboard.writeText(content).then(() => {
             setShowCopyDescription(true);
-                setTimeout(() => {
-                    setShowCopyDescription(false);
-                }, 2000);
+            setTimeout(() => {
+                setShowCopyDescription(false);
+            }, 2000);
         }).catch(err => {
             console.error('コピー失敗', err);
         });
     };
 
     const downloadImage = () => {
-        if (resultRef.current === null) return;
-
+        if (resultRef.current === null || words.length === 0) return;
         toPng(resultRef.current)
             .then(dataUrl => {
                 const link = document.createElement('a');
@@ -73,8 +67,7 @@ const Result = forwardRef(({words, setWords}, ref) => {
     };
 
     const downloadPDF = () => {
-        if (resultRef.current === null) return;
-
+        if (resultRef.current === null || words.length === 0) return;
         html2canvas(resultRef.current).then(canvas => {
             const imgData = canvas.toDataURL('image/png');
             const pdf = new jsPDF({
@@ -97,36 +90,36 @@ const Result = forwardRef(({words, setWords}, ref) => {
 
     const updateFurigana = (wordIndex, textIndex, newFurigana, newAccent) => {
         let newWords = [...words];
-                if (newFurigana === placeholder) { // 被刪空
-            if (newWords[wordIndex].furigana.length === 1) { //　要刪光了就放placeholder
+        if (newFurigana === placeholder) { 
+            if (newWords[wordIndex].furigana.length === 1) { 
                 newWords[wordIndex].furigana[textIndex].text = placeholder;
                 newWords[wordIndex].furigana[textIndex].accent = 0;
             }
-            else // 不然刪掉
+            else 
                 newWords[wordIndex].furigana.splice(textIndex, 1);
         }
-        else if (splitKanaSyllables(newFurigana).length === 1) { // 音節長度還是1就直接更新
+        else if (splitKanaSyllables(newFurigana).length === 1) { 
             newWords[wordIndex].furigana[textIndex].text = newFurigana;
             newWords[wordIndex].furigana[textIndex].accent = newAccent;
-        }
-        else { // 變長就把原本的刪掉把新的拆開丟進furigana
-            // newWords[wordIndex].furigana.splice(textIndex, 0, 
-            //     ...splitKanaSyllables(newFurigana).map(char => ({
-            //         text: char,
-            //         accent: 0
-            //     })));
         }
         setWords(newWords);
     }
 
-    return (
-        <section className='result-section' ref={ref}>
-            <h3 className='result-description'>クリックしてアクセントを編集</h3>
+    // Determine content to show: Skeleton, Empty State, or Data
+    let content;
+    if (isLoading) {
+        content = <SkeletonLoader lines={5} />;
+    } else if (!words || words.length === 0) {
+        content = (
+            <div className="empty-state">
+                <p>実行して結果を表示</p>
+            </div>
+        );
+    } else {
+        content = (
             <p className='result-area' ref={resultRef}>
-                {/* Display words according to surface and furigana */}
                 {words.map((word, wordIndex) => 
                     <ruby key={`${wordIndex}-${word}`}>
-                        {/* Kanji -> <span>, kana -> <Kana> (accent enabled) */}
                         {[...word.surface].map((char, charIndex) =>
                             word.furigana.text ? 
                                 <span key={`${wordIndex}-${charIndex}`}>{char}</span> :
@@ -138,7 +131,6 @@ const Result = forwardRef(({words, setWords}, ref) => {
                                         updateKana(wordIndex, charIndex, newAccent)}
                                     />
                                 )}
-                        {/* If there is furigana, display it in rt and make it editable */}
                         <rt>
                             {[...word.furigana].map((char, charIndex) => 
                                     <Kana
@@ -154,30 +146,48 @@ const Result = forwardRef(({words, setWords}, ref) => {
                     </ruby>
                 )}
             </p>
-            <button 
-                className={`color-button ${theme && 'dark'}`} 
-                onClick={() => setTheme(t => !t)}
-            >
-                <i className={'fa-solid fa-palette'}/>
-            </button>
-            <div className='result-buttons'>
-                <button className='copy-button' onClick={copyResult}>
-                    <i className="fa-solid fa-copy"/>
-                </button>
-                <span className='copy-description' style={{opacity: +showCopyDescription}}>
+        );
+    }
+
+    return (
+        <div className={`result-container-inner ${theme ? 'dark-theme' : ''}`} ref={ref}>
+            {showCopyDescription && (
+                 <div className="toast-notification">
                     コピーしました！
-                </span>
-                <i className="fa-solid fa-download download"/>
-                <div className='share-buttons'>
-                    <button className='image-button'>
-                        <i className="fa-solid fa-image" onClick={downloadImage}/>
+                </div>
+            )}
+
+            <div className="result-content">
+                {content}
+            </div>
+
+            <div className="result-actions">
+                <button 
+                    className={`action-button theme-toggle ${theme && 'active'}`} 
+                    onClick={() => setTheme(t => !t)}
+                    title="テーマ切り替え"
+                >
+                    <Palette size={18} />
+                </button>
+                
+                <div className="export-group">
+                    <button className='action-button' onClick={copyResult} title="コピー">
+                        <Copy size={18} />
+                        <span>コピー</span>
                     </button>
-                    <button className='pdf-button' onClick={downloadPDF}>
-                        <i className="fa-solid fa-file-pdf"/>
+                    
+                    <button className='action-button' onClick={downloadImage} title="画像として保存">
+                            <ImageIcon size={18} />
+                            <span>画像保存</span>
+                    </button>
+                    
+                    <button className='action-button' onClick={downloadPDF} title="PDFとして保存">
+                            <FileText size={18} />
+                            <span>PDF保存</span>
                     </button>
                 </div>
             </div>
-        </section>
+        </div>
     )
 })
 

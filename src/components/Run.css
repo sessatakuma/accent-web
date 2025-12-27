@@ -1,82 +1,51 @@
-@property --progress {
-    syntax: '<length-percentage>';
-    inherits: false;
-    initial-value: 0%;
+.run-container {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: flex-end;
 }
 
 .run-button {
-    --size: 10vh;
-    --bar-width: .5rem;
-
-    position: relative;
-    width: var(--size);
-    aspect-ratio: 1 / 1;
-    margin: 5vh 0;
-
-    background: var(--color-accent);
-    color: var(--color-primary);
-    border-radius: 50%;
-
-    cursor: pointer;
-    transition: 
-        font-size .2s ease, 
-        scale .2s ease, 
-        --progress .5s;
-    overflow: hidden;
-    
-    display: grid;
-    place-items: center;
-
-    &:hover:not(.running) {
-        font-size: 2rem;
-        scale: 1.1;
-    }
-
-    &::after {
-        content: '';
-        background: var(--color-accent);
-        border-radius: inherit;
-        width: calc(100% - var(--bar-width));
-        aspect-ratio: 1 / 1;
-
-        display: grid;
-    }
-
-    &.running {
-        background: conic-gradient(
-        var(--color-primary) var(--progress, 0),
-        color-mix(in hsl, var(--color-accent), #000 5%) 0%
-        );
-        cursor: wait
-    }
-
-    &.running::after {
-        background-color: color-mix(in hsl, var(--color-accent), #000 5%);
-    }
-}
-
-.run-button i {
-    width: 5vh;
-    height: 5vh;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
     display: flex;
-    justify-content: center;
     align-items: center;
-    transition: 0s;
-    &:first-child {
-        transition: 0s;
-        transform: translate(-50%, -300%);    
-    }
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background-color: var(--color-accent-green);
+    color: white;
+    font-weight: 600;
+    border-radius: var(--radius-md);
+    transition: all 0.2s ease;
+    border: none;
+    font-size: 1rem;
+    box-shadow: 0 4px 6px -1px rgba(52, 211, 153, 0.4);
 }
 
-.run-button:hover:not(.running) i {
-        transition: transform .2s ease;
-        transform: translate(-50%, 150%);
-    &:first-child {
-        transition: transform .2s ease .3s;
-        transform: translate(-50%, -50%);
+.run-button:hover:not(:disabled) {
+    background-color: var(--color-accent-green-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 8px -1px rgba(52, 211, 153, 0.5);
+}
+
+.run-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background-color: var(--color-text-secondary);
+    box-shadow: none;
+}
+
+.run-button .icon {
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
+.run-button .animate-spin {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
     }
 }
