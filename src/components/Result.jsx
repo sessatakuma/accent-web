@@ -152,8 +152,8 @@ const Result = forwardRef(({words, setWords, isLoading}, ref) => {
     return (
         <div className={`result-container-inner ${theme ? 'dark-theme' : ''}`} ref={ref}>
             {showCopyDescription && (
-                 <div className="toast-notification">
-                    コピーしました！
+                <div className="toast-notification">
+                    HackMD形式でコピーしました！
                 </div>
             )}
 
@@ -171,9 +171,9 @@ const Result = forwardRef(({words, setWords, isLoading}, ref) => {
                 </button>
                 
                 <div className="export-group">
-                    <button className='action-button' onClick={copyResult} title="コピー">
+                    <button className='action-button' onClick={copyResult} title="HackMD形式でコピー (カスタムレンダリング用)">
                         <Copy size={18} />
-                        <span>コピー</span>
+                        <span>HackMD</span>
                     </button>
                     
                     <button className='action-button' onClick={downloadImage} title="画像として保存">
