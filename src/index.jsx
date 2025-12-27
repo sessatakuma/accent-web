@@ -5,8 +5,6 @@ import Main from 'components/Main.jsx';
 
 import './index.css';
 
-window.onload = function() {
-    const container = document.getElementById('root');
-    const root = createRoot(container);
-    root.render(<Main/>);
-};
+const container = document.getElementById('root');
+const root = createRoot(container);
+root.render(<Main />);
