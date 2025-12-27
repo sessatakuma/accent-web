@@ -163,6 +163,74 @@ const Result = forwardRef(({words, setWords, isLoading}, ref) => {
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, [isMenuOpen]);
 
+    const copyPlainText = () => {
+        if (!words || words.length === 0) return;
+        
+        const content = words.map(word => {
+            const surface = word.surface;
+            
+            // Logic to determine accent nucleus index
+            let accentIndex = 0;
+            // Check furigana or surface accent for drop (2) or kick (1) if simple pattern
+            // Note: Data structure uses 1 for 'KERNEL/KICK'? 2 for 'DROP'? 
+            // In Result.jsx map: accent===1 -> <i> (High?), accent===2 -> <b> (Drop?)
+            // If the goal is standard numeric notation (0 for Heiban, N for drop at Nth mora):
+            // We need to find the mora index of the drop.
+            // If array has '2' at index i, then accent nucleus is i+1?
+            
+            let dropIndex = -1;
+            
+            if (Array.isArray(word.furigana) && word.furigana.length > 0) {
+                 // Furigana-based word
+                 dropIndex = word.furigana.findIndex(f => f.accent === 2);
+                 if (dropIndex !== -1) {
+                     accentIndex = dropIndex + 1;
+                 } else {
+                     // Check for Heiban (0) or Atamadaka (1)?
+                     // If index 0 is high (1) and nothing else drops... wait, standard pitch accent:
+                     // 1 (Atamadaka): High-Low... Drop is after 1st mora. So index 0 has drop?
+                     // If accent array is [1, 0, 0...] -> This might mean High start?
+                     // Let's assume the 'accent' property values map to:
+                     // 0: Low/Middle? 
+                     // 1: High start? 
+                     // 2: Drop?
+                     
+                     // In Kana.jsx: accentName = ['none', 'flat', 'drop'] (0, 1, 2)
+                     // 1 is 'flat' (meaning High but no drop? or plateau?) -> "Kick" in heiban usually.
+                     // 2 is 'drop' (Accent Nucleus).
+                     
+                     // So if we find a '2', that's the nucleus.
+                     const foundDrop = word.furigana.findIndex(f => f.accent === 2);
+                     if (foundDrop !== -1) accentIndex = foundDrop + 1;
+                 }
+                 
+                 let reading = word.furigana.map(f => f.text).join('');
+                 
+                 // If surface equals reading (Kana word), output: Surface (Accent)
+                 if (surface === reading) {
+                      return `${surface}（${accentIndex}）`;
+                 }
+                 // Mixed word: Surface (Reading | Accent)
+                 return `${surface}（${reading}｜${accentIndex}）`;
+            } else {
+                // Kana/Surface only word
+                // Check word.accent array
+                 if (word.accent) {
+                    const foundDrop = word.accent.findIndex(a => a === 2);
+                    if (foundDrop !== -1) accentIndex = foundDrop + 1;
+                 }
+                 return `${surface}（${accentIndex}）`;
+            }
+        }).join('');
+        
+        navigator.clipboard.writeText(content).then(() => {
+            setShowCopyDescription(true);
+            setTimeout(() => {
+                setShowCopyDescription(false);
+            }, 2000);
+        });
+    };
+
     return (
         <div className={`result-container-inner ${theme ? 'dark-theme' : ''} ${isEmpty ? 'tone-down' : ''}`} ref={ref}>
             {showCopyDescription && (
@@ -170,7 +238,7 @@ const Result = forwardRef(({words, setWords, isLoading}, ref) => {
                     コピーしました！
                 </div>
             )}
-
+            
             <div className="result-content">
                 {content}
             </div>
@@ -178,11 +246,15 @@ const Result = forwardRef(({words, setWords, isLoading}, ref) => {
             {!isEmpty && (
                 <div className="result-actions">
                      <div className="action-group-left">
+                        <button className='action-button' onClick={copyPlainText} title="テキスト形式でコピー">
+                            <FileText size={18} />
+                            <span>Text</span>
+                        </button>
                         <button className='action-button' onClick={copyResult} title="HackMD形式でコピー (カスタムレンダリング用)">
                             <Copy size={18} />
                             <span>HackMD</span>
                         </button>
-                    </div>
+                    </div>  
 
                     <div className="save-menu-container">
                         <button 
