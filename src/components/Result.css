@@ -80,7 +80,7 @@
     font-size: 1.5rem;
     line-height: 2;
     color: var(--color-text-primary);
-    padding: 1rem; /* Consistent padding for both themes */
+    padding: 0; /* Remove padding to align with Input */
     border-radius: var(--radius-md);
     transition: background-color 0.2s ease, color 0.2s ease;
 }
