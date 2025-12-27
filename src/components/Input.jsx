@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dices } from 'lucide-react';
+import { Dices, Clipboard } from 'lucide-react';
 import 'components/Input.css';
 
 export default function Input({paragraph, setParagraph}) {
@@ -14,6 +14,17 @@ export default function Input({paragraph, setParagraph}) {
         setParagraph(newText);
     };
 
+    const handlePaste = async () => {
+        try {
+            const text = await navigator.clipboard.readText();
+            if (text) {
+                setParagraph(text);
+            }
+        } catch (err) {
+            console.error('Failed to read clipboard contents: ', err);
+        }
+    };
+
     return (
         <section className='input-section'>
             <textarea
@@ -22,9 +33,18 @@ export default function Input({paragraph, setParagraph}) {
                 onChange={(e) => setParagraph(e.target.value)}
                 placeholder="文章を入力..."
             />
-            <button className='generate-button' onClick={generateRandomParagraph} title="ランダムな文章を生成">
-                <Dices size={20} />
-            </button>
+            
+            <div className='input-actions'>
+                {!paragraph && (
+                    <button className='paste-button' onClick={handlePaste} title="Paste from clipboard">
+                        <Clipboard size={20} />
+                    </button>
+                )}
+
+                <button className='generate-button' onClick={generateRandomParagraph} title="ランダムな文章を生成">
+                    <Dices size={20} />
+                </button>
+            </div>
         </section>
     );
 }

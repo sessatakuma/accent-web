@@ -41,14 +41,18 @@
     opacity: 0.6;
 }
 
-.generate-button {
+.input-actions {
     position: absolute;
-    right: 1rem;
-    top: 1rem; /* Move inside or near the area */
-    /* Or maybe bottom right of the area? */
     bottom: 1rem;
-    top: auto;
-    
+    right: 1rem;
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    z-index: 10;
+}
+
+.generate-button {
+    /* Position removed, handled by container */
     width: 2.5rem;
     height: 2.5rem;
     border-radius: 50%;
@@ -59,10 +63,38 @@
     justify-content: center;
     border: 1px solid var(--color-border);
     transition: all 0.2s ease;
+    cursor: pointer;
 }
 
 .generate-button:hover {
     background-color: var(--color-accent-green-light);
     color: var(--color-accent-green);
     transform: rotate(15deg);
+}
+
+/* Paste Button - Mobile Only */
+.paste-button {
+    display: none; /* Hidden by default (desktop) */
+}
+
+@media (max-width: 768px) {
+    .paste-button {
+        /* Styles matched to generate-button */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: 50%;
+        background-color: var(--color-bg-primary);
+        color: var(--color-text-secondary);
+        border: 1px solid var(--color-border);
+        transition: all 0.2s ease;
+        cursor: pointer;
+    }
+
+    .paste-button:active {
+        background-color: var(--color-bg-secondary);
+        transform: scale(0.95);
+    }
 }
