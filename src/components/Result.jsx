@@ -149,8 +149,10 @@ const Result = forwardRef(({words, setWords, isLoading}, ref) => {
         );
     }
 
+    const isEmpty = !words || words.length === 0;
+
     return (
-        <div className={`result-container-inner ${theme ? 'dark-theme' : ''}`} ref={ref}>
+        <div className={`result-container-inner ${theme ? 'dark-theme' : ''} ${isEmpty ? 'tone-down' : ''}`} ref={ref}>
             {showCopyDescription && (
                 <div className="toast-notification">
                     HackMD形式でコピーしました！
@@ -161,32 +163,34 @@ const Result = forwardRef(({words, setWords, isLoading}, ref) => {
                 {content}
             </div>
 
-            <div className="result-actions">
-                <button 
-                    className={`action-button theme-toggle ${theme && 'active'}`} 
-                    onClick={() => setTheme(t => !t)}
-                    title="テーマ切り替え"
-                >
-                    <Palette size={18} />
-                </button>
-                
-                <div className="export-group">
-                    <button className='action-button' onClick={copyResult} title="HackMD形式でコピー (カスタムレンダリング用)">
-                        <Copy size={18} />
-                        <span>HackMD</span>
+            {!isEmpty && (
+                <div className="result-actions">
+                    <button 
+                        className={`action-button theme-toggle ${theme && 'active'}`} 
+                        onClick={() => setTheme(t => !t)}
+                        title="テーマ切り替え"
+                    >
+                        <Palette size={18} />
                     </button>
                     
-                    <button className='action-button' onClick={downloadImage} title="画像として保存">
-                            <ImageIcon size={18} />
-                            <span>画像保存</span>
-                    </button>
-                    
-                    <button className='action-button' onClick={downloadPDF} title="PDFとして保存">
-                            <FileText size={18} />
-                            <span>PDF保存</span>
-                    </button>
+                    <div className="export-group">
+                        <button className='action-button' onClick={copyResult} title="HackMD形式でコピー (カスタムレンダリング用)">
+                            <Copy size={18} />
+                            <span>HackMD</span>
+                        </button>
+                        
+                        <button className='action-button' onClick={downloadImage} title="画像として保存">
+                                <ImageIcon size={18} />
+                                <span>画像保存</span>
+                        </button>
+                        
+                        <button className='action-button' onClick={downloadPDF} title="PDFとして保存">
+                                <FileText size={18} />
+                                <span>PDF保存</span>
+                        </button>
+                    </div>
                 </div>
-            </div>
+            )}
         </div>
     )
 })

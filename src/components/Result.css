@@ -107,6 +107,14 @@ rt {
     /* Removed padding to prevent layout shift - padding should be on base class if needed, or consistent */
 }
 
+.result-container-inner.tone-down {
+    opacity: 0.7;
+    filter: grayscale(0.5);
+    pointer-events: none; /* Make non-interactable */
+    user-select: none;
+
+}
+
 .toast-notification {
     position: absolute;
     top: 4rem;
