@@ -2,7 +2,7 @@ import React, { useState, forwardRef } from 'react';
 import { toPng } from 'html-to-image';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas'; 
-import { Copy, Image as ImageIcon, FileText, Palette } from 'lucide-react';
+import { Copy, Image as ImageIcon, FileText, Palette, ArrowDownToLine } from 'lucide-react';
 
 import isKana from 'utilities/isKana.jsx';
 import { placeholder } from 'utilities/placeholder.jsx';
@@ -149,13 +149,25 @@ const Result = forwardRef(({words, setWords, isLoading}, ref) => {
         );
     }
 
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
     const isEmpty = !words || words.length === 0;
+
+    // Close menu when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (isMenuOpen && !event.target.closest('.save-menu-container')) {
+                setIsMenuOpen(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, [isMenuOpen]);
 
     return (
         <div className={`result-container-inner ${theme ? 'dark-theme' : ''} ${isEmpty ? 'tone-down' : ''}`} ref={ref}>
             {showCopyDescription && (
                 <div className="toast-notification">
-                    HackMD形式でコピーしました！
+                    コピーしました！
                 </div>
             )}
 
@@ -165,29 +177,40 @@ const Result = forwardRef(({words, setWords, isLoading}, ref) => {
 
             {!isEmpty && (
                 <div className="result-actions">
-                    <button 
-                        className={`action-button theme-toggle ${theme && 'active'}`} 
-                        onClick={() => setTheme(t => !t)}
-                        title="テーマ切り替え"
-                    >
-                        <Palette size={18} />
-                    </button>
-                    
-                    <div className="export-group">
+                     <div className="action-group-left">
                         <button className='action-button' onClick={copyResult} title="HackMD形式でコピー (カスタムレンダリング用)">
                             <Copy size={18} />
                             <span>HackMD</span>
                         </button>
-                        
-                        <button className='action-button' onClick={downloadImage} title="画像として保存">
-                                <ImageIcon size={18} />
-                                <span>画像保存</span>
+                    </div>
+
+                    <div className="save-menu-container">
+                        <button 
+                            className={`action-button save-menu-trigger ${isMenuOpen ? 'active' : ''}`} 
+                            onClick={() => setIsMenuOpen(!isMenuOpen)}
+                            title="保存オプション"
+                        >
+                            <ArrowDownToLine size={18} />
+                            <span>保存</span>
                         </button>
-                        
-                        <button className='action-button' onClick={downloadPDF} title="PDFとして保存">
-                                <FileText size={18} />
-                                <span>PDF保存</span>
-                        </button>
+
+                        {isMenuOpen && (
+                            <div className="save-menu-dropdown">
+                                <button className='menu-item' onClick={() => {downloadImage(); setIsMenuOpen(false);}}>
+                                    <ImageIcon size={16} />
+                                    <span>画像として保存</span>
+                                </button>
+                                <button className='menu-item' onClick={() => {downloadPDF(); setIsMenuOpen(false);}}>
+                                    <FileText size={16} />
+                                    <span>PDFとして保存</span>
+                                </button>
+                                <div className="menu-divider"></div>
+                                <button className='menu-item' onClick={() => setTheme(t => !t)}>
+                                    <Palette size={16} />
+                                    <span>テーマ切り替え</span>
+                                </button>
+                            </div>
+                        )}
                     </div>
                 </div>
             )}
