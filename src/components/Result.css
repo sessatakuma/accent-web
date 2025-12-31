@@ -50,7 +50,7 @@
 }
 
 .action-button:hover {
-    background-color: var(--color-bg-primary);
+    background-color: var(--color-bg-secondary-hover);
     color: var(--color-text-primary);
     border-color: var(--color-text-secondary);
 }
@@ -275,7 +275,7 @@ input:checked + .slider:before {
 }
 
 .menu-item:hover {
-    background-color: var(--color-bg-primary);
+    background-color: var(--color-bg-secondary-hover);
     color: var(--color-text-primary);
     border-color: var(--color-text-secondary);
 }

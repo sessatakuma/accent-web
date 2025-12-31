@@ -1,22 +1,23 @@
 :root {
     /* Color Palette - Clean & Chill */
-    --color-bg-primary: #FAFAF9; /* Stone 50 */
+    --color-bg-primary: hsl(0, 8%, 90%); /* Stone 50 */
     --color-bg-secondary: #FFFFFF; /* White */
+    --color-bg-secondary-hover: #FAFAF9; /* Stone 50 */
     
     --color-text-primary: #1F2937; /* Gray 800 */
     --color-text-secondary: #6B7280; /* Gray 500 */
     --color-text-inverted: #FFFFFF;
 
     /* Accents */
-    /* Green - Chill Emerald */
-    --color-accent-green: #34D399; /* Emerald 400 */
-    --color-accent-green-hover: #10B981; /* Emerald 500 */
-    --color-accent-green-light: #D1FAE5; /* Emerald 100 */
+    /* Green - Legacy Brand Accent */
+    --color-accent-green: #619e83;
+    --color-accent-green-hover: #4e7e69;
+    --color-accent-green-light: #eff7f4;
 
-    /* Red - Soft Red */
-    --color-accent-red: #F87171; /* Red 400 */
-    --color-accent-red-hover: #EF4444; /* Red 500 */
-    --color-accent-red-light: #FEE2E2; /* Red 100 */
+    /* Red - Legacy Brand Secondary */
+    --color-accent-red: #9e4145;
+    --color-accent-red-hover: #7e3437;
+    --color-accent-red-light: #fcf2f2;
 
     /* UI Elements */
     --color-border: #E5E7EB; /* Gray 200 */
@@ -44,9 +45,22 @@
     box-sizing: border-box;
 }
 
+html {
+    background: var(--color-accent-green);
+    &::after {
+        content: '';
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100vw;
+        height: 50vh;
+        background-color: var(--color-bg-primary);
+        z-index: -1;
+    }
+}
+
 body {
     font-family: 'Inter', sans-serif;
-    background-color: var(--color-bg-primary);
     color: var(--color-text-primary);
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;

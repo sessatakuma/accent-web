@@ -30,7 +30,6 @@
 .input-panel, .result-panel {
     background-color: var(--color-bg-secondary);
     border-radius: var(--radius-xl);
-    box-shadow: var(--shadow-soft);
     border: 1px solid var(--color-border);
     transition: all 0.2s ease;
     /* height: 100%; Removed to allow growth */
@@ -46,8 +45,4 @@
 
 .result-panel {
     padding: 0;
-}
-
-.input-panel:hover, .result-panel:hover {
-    box-shadow: var(--shadow-hover);
 }
