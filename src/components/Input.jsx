@@ -49,7 +49,7 @@ export default function Input({paragraph, setParagraph}) {
             
             <div className='input-actions'>
                 {!paragraph && (
-                    <button className='paste-button' onClick={handlePaste} title="Paste from clipboard">
+                    <button className='paste-button' onClick={handlePaste} title="ペースト">
                         <Clipboard size={20} />
                     </button>
                 )}
