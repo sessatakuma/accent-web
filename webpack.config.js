@@ -1,81 +1,88 @@
 const path = require('path');
-const webpack = require('webpack');
 
 const srcPath = path.resolve(__dirname, 'src');
 const distPath = path.resolve(__dirname, 'dist');
 
 module.exports = {
-    context: srcPath,
+    context: __dirname,
+
+    mode: 'development',
+
     resolve: {
+        extensions: ['.js', '.jsx'],
         alias: {
             components: path.resolve(srcPath, 'components'),
+            constants: path.resolve(srcPath, 'constants'),
+            hooks: path.resolve(srcPath, 'hooks'),
             utilities: path.resolve(srcPath, 'utilities'),
-            api: path.resolve(srcPath, 'api'),
-            images: path.resolve(distPath, 'images')
-        }
+        },
     },
+
     entry: {
-        index: './index.jsx',
-        vendor: ['react', 'react-dom']
+        index: './src/index.jsx',
     },
+
     output: {
         path: distPath,
-        filename: '[name].bundle.js'
+        filename: '[name].bundle.js',
     },
+
     module: {
         rules: [
             {
                 test: /\.(js|jsx)$/,
-                exclude: [/node_modules/],
-                use: [
-                    {
-                        loader: 'babel-loader',
-                        options: {
-                            presets: [
-                                [
-                                    '@babel/preset-env', {
-                                        modules: false
-                                    }
-                                ],
-                                '@babel/preset-react'
-                            ],
-                            plugins: [
-                                '@babel/plugin-proposal-class-properties',
-                                '@babel/plugin-proposal-object-rest-spread'
-                            ]
-                        }
-                    }
-                ]
-            }, {
+                exclude: /node_modules/,
+                use: {
+                    loader: 'babel-loader',
+                    options: {
+                        presets: [
+                            ['@babel/preset-env', { modules: false }],
+                            '@babel/preset-react',
+                        ],
+                    },
+                },
+            },
+            {
                 test: /\.css$/,
                 use: [
                     'style-loader',
                     {
                         loader: 'css-loader',
-                        options : {
-                            url: false
-                        }
-                    }
-                ]
-            }
-        ]
+                        options: {
+                            url: false,
+                        },
+                    },
+                ],
+            },
+            {
+                test: /\.(png|jpe?g|gif|svg)$/i,
+                type: 'asset/resource',
+            },
+        ],
     },
+
     optimization: {
         splitChunks: {
             cacheGroups: {
-                vendor: {          
+                vendor: {
                     minChunks: 2,
                     name: 'vendor',
-                    chunks: 'all'
-                }
-            }
-        }
+                    chunks: 'all',
+                },
+            },
+        },
     },
+
     devServer: {
-        contentBase: distPath,
+        static: {
+            directory: distPath,
+            watch: true,
+        },
         compress: true,
-        port: 8080,
-        historyApiFallback: true
+        port: 3000,
+        hot: true,
+        historyApiFallback: true,
     },
-    devtool: 'source-map'
+
+    devtool: 'source-map',
 };
