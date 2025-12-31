@@ -12,7 +12,7 @@ import SkeletonLoader from 'components/SkeletonLoader.jsx';
 import 'components/Result.css';
 
 const Result = forwardRef(({words, setWords, isLoading}, ref) => {
-    const [showCopyDescription, setShowCopyDescription] = useState(false); 
+    const [copyFeedback, setCopyFeedback] = useState(null); 
     const [isDarkResult, setIsDarkResult] = useState(false); 
 
     const resultRef = React.useRef(null);
@@ -42,9 +42,9 @@ const Result = forwardRef(({words, setWords, isLoading}, ref) => {
         }).join('').replace(/<\/b><b>/g, '').replace(/<\/i><i>/g, '');
 
         navigator.clipboard.writeText(content).then(() => {
-            setShowCopyDescription(true);
+            setCopyFeedback('HackMD形式でコピーしました！');
             setTimeout(() => {
-                setShowCopyDescription(false);
+                setCopyFeedback(null);
             }, 2000);
         }).catch(err => {
             console.error('コピー失敗', err);
@@ -244,21 +244,15 @@ const Result = forwardRef(({words, setWords, isLoading}, ref) => {
         }).join('');
         
         navigator.clipboard.writeText(content).then(() => {
-            setShowCopyDescription(true);
+            setCopyFeedback('コピーしました！');
             setTimeout(() => {
-                setShowCopyDescription(false);
+                setCopyFeedback(null);
             }, 2000);
         });
     };
 
     return (
         <div className={`result-container-inner ${isDarkResult ? 'dark-result' : ''} ${isEmpty ? 'tone-down' : ''}`} ref={ref}>
-            {showCopyDescription && (
-                <div className="toast-notification">
-                    コピーしました！
-                </div>
-            )}
-            
             <div className="result-content">
                 {content}
             </div>
@@ -266,6 +260,11 @@ const Result = forwardRef(({words, setWords, isLoading}, ref) => {
             {!isEmpty && (
                 <div className="result-actions">
                      <div className="action-group-left">
+                        {copyFeedback && (
+                            <div className="toast-notification">
+                                {copyFeedback}
+                            </div>
+                        )}
                         <button className='action-button' onClick={copyPlainText} title="テキスト形式でコピー">
                             <Copy size={18} />
                             <span>Text</span>

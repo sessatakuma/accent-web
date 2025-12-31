@@ -135,16 +135,19 @@ rt {
 
 .toast-notification {
     position: absolute;
-    top: 4rem;
-    right: 1rem;
+    bottom: 100%;
+    left: 0;
+    margin-bottom: 0.5rem;
     background-color: var(--color-accent-green);
     color: white;
     padding: 0.5rem 1rem;
     border-radius: var(--radius-md);
     font-size: 0.875rem;
+    white-space: nowrap;
     box-shadow: var(--shadow-hover);
     animation: fadeInOut 2s ease forwards;
     z-index: 10;
+    pointer-events: none; /* Let clicks pass through if it ever covers something, though outside flow */
 }
 
 @keyframes fadeInOut {
@@ -157,6 +160,7 @@ rt {
 .action-group-left {
     display: flex;
     gap: 0.5rem;
+    position: relative;
 }
 
 .save-menu-container {
