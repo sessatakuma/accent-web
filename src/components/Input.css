@@ -17,7 +17,7 @@
 .input-area {
     width: 100%;
     /* min-height removed, will rely on flex */
-    flex: 1; /* Fill remaining space */
+    /* flex: 1; Removed to allow JS height control */
     padding: 1.5rem;
     background-color: transparent;
     border: none;

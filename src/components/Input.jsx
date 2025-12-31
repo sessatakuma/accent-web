@@ -1,8 +1,19 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import { Dices, Clipboard } from 'lucide-react';
 import 'components/Input.css';
 
 export default function Input({paragraph, setParagraph}) {
+    const textareaRef = useRef(null);
+
+    useEffect(() => {
+        if (textareaRef.current) {
+            // Reset height to auto to correctly calculate scrollHeight for shrinking
+            textareaRef.current.style.height = 'auto';
+            // Set new height based on scroll height, but keep it at least 100% of parent if needed (handled by minHeight in style prop)
+            const scrollHeight = textareaRef.current.scrollHeight;
+            textareaRef.current.style.height = `${scrollHeight}px`;
+        }
+    }, [paragraph]);
     const generateRandomParagraph = () => {
         const examples = [
             "今日は朝から猫がベランダで日向ぼっこしていたので、つい一緒にゴロゴロしてしまった。",
@@ -28,10 +39,12 @@ export default function Input({paragraph, setParagraph}) {
     return (
         <section className='input-section'>
             <textarea
+                ref={textareaRef}
                 className='input-area'
                 value={paragraph}
                 onChange={(e) => setParagraph(e.target.value)}
                 placeholder="文章を入力..."
+                style={{ minHeight: '100%' }}
             />
             
             <div className='input-actions'>
