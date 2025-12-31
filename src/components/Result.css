@@ -3,6 +3,14 @@
     flex-direction: column;
     height: 100%;
     padding: 1.5rem;
+    border-radius: var(--radius-lg); /* Match input radius */
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* Dark Theme applied to the container */
+.result-container-inner.dark-result {
+    background-color: var(--color-bg-dark-panel);
+    color: var(--color-text-dark-primary);
 }
 
 /* .result-header removed */
@@ -44,6 +52,16 @@
 .action-button:hover {
     background-color: var(--color-bg-primary);
     color: var(--color-text-primary);
+    border-color: var(--color-text-secondary);
+}
+
+.result-container-inner.dark-result .action-button {
+    color: var(--color-text-dark-secondary); /* Light gray for dark mode */
+}
+
+.result-container-inner.dark-result .action-button:hover {
+    background-color: var(--color-bg-dark-hover);
+    color: var(--color-text-dark-primary);
 }
 
 .theme-toggle.active {
@@ -101,10 +119,10 @@ rt {
     color: var(--color-text-secondary); /* Milder color */
 }
 
+/* Legacy block removed or updated to use variables if needed - currently unused */
 .dark-theme .result-area {
-    background-color: #1F2937;
-    color: #F9FAFB;
-    /* Removed padding to prevent layout shift - padding should be on base class if needed, or consistent */
+     background-color: var(--color-bg-dark-panel);
+     color: var(--color-text-dark-primary);
 }
 
 .result-container-inner.tone-down {
@@ -150,8 +168,8 @@ rt {
     position: absolute;
     bottom: 100%;
     right: 0;
-    width: 200px;
-    background-color: var(--color-bg-primary); 
+    width: 240px;
+    background-color: var(--color-bg-secondary); /* Enforce white background */
     border: 1px solid var(--color-border);
     border-radius: var(--radius-md);
     box-shadow: var(--shadow-lg);
@@ -161,47 +179,120 @@ rt {
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
+    /* Force dark text color since background is white */
+    color: var(--color-text-menu-fixed); 
+    text-align: left;
 }
 
 /* Ensure background is solid */
-.dark-theme .save-menu-dropdown {
-    background-color: #374151; 
-    border-color: #4B5563;
-}
-.save-menu-dropdown {
-     background-color: #FFFFFF;
+
+/* Switch Styling */
+.theme-switch-container {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    gap: 0.5rem;
+    cursor: default;
+    color: var(--color-text-menu-fixed); /* Force dark text */
+    border-bottom: 1px solid var(--color-border);
 }
 
-.menu-item {
+.theme-switch-label {
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    width: 100%;
-    padding: 0.5rem 0.75rem;
-    border: none;
-    background: transparent;
-    color: var(--color-text-primary);
-    text-align: left;
-    cursor: pointer;
-    border-radius: var(--radius-sm);
     font-size: 0.9rem;
-    transition: background-color 0.2s;
+    color: var(--color-text-menu-fixed); /* Force dark text */
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 36px;
+    height: 20px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 34px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 14px;
+    width: 14px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: var(--color-accent-green);
+}
+
+input:focus + .slider {
+    box-shadow: 0 0 1px var(--color-accent-green);
+}
+
+input:checked + .slider:before {
+    transform: translateX(16px);
+}
+
+/* Dark theme specific adjustments for the Result Area ONLY */
+/* Dark theme specific adjustments removed - handled by container */
+
+/* Ensure menu items don't have dark theme styles applied from parent */
+.menu-item {
+    color: var(--color-text-menu-fixed); /* Force dark text even if global theme is dark */
+    background-color: transparent;
+    border: none;
+    color: var(--color-text-secondary);
+    padding: 0.5rem 0.75rem;
+    border-radius: var(--radius-md);
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-weight: 500;
+    font-size: 0.9rem;
 }
 
 .menu-item:hover {
-    background-color: var(--color-bg-secondary);
-}
-.dark-theme .menu-item:hover {
-     background-color: #4B5563;
-}
-
-.menu-divider {
-    height: 1px;
-    background-color: var(--color-border);
-    margin: 0.25rem 0;
-}
-
-.save-menu-trigger.active {
     background-color: var(--color-bg-primary);
     color: var(--color-text-primary);
+    border-color: var(--color-text-secondary);
+}
+
+/* Ensure empty state text handles dark mode */
+.result-container-inner.dark-result .empty-state {
+    color: var(--color-text-dark-secondary);
+}
+
+.result-container-inner.dark-result rt {
+    color: var(--color-text-dark-secondary);
+}
+
+/* Force all standard text in dark result to be light */
+.result-container-inner.dark-result .result-area,
+.result-container-inner.dark-result .result-area span,
+.result-container-inner.dark-result .result-area ruby {
+    color: var(--color-text-dark-primary);
 }

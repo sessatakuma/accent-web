@@ -1,8 +1,7 @@
 import React, { useState, useEffect, forwardRef } from 'react';
 import { toPng } from 'html-to-image';
 import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas'; 
-import { Copy, Image as ImageIcon, FileText, Palette, ArrowDownToLine } from 'lucide-react';
+import { Copy, Image as ImageIcon, FileText, ArrowDownToLine, CodeXml } from 'lucide-react';
 
 import isKana from 'utilities/isKana.jsx';
 import { placeholder } from 'utilities/placeholder.jsx';
@@ -14,7 +13,7 @@ import 'components/Result.css';
 
 const Result = forwardRef(({words, setWords, isLoading}, ref) => {
     const [showCopyDescription, setShowCopyDescription] = useState(false); 
-    const [theme, setTheme] = useState(0); 
+    const [isDarkResult, setIsDarkResult] = useState(false); 
 
     const resultRef = React.useRef(null);
     
@@ -54,7 +53,10 @@ const Result = forwardRef(({words, setWords, isLoading}, ref) => {
 
     const downloadImage = () => {
         if (resultRef.current === null || words.length === 0) return;
-        toPng(resultRef.current)
+        
+        const bgColor = isDarkResult ? '#1F2937' : '#FFFFFF';
+        
+        toPng(resultRef.current, { backgroundColor: bgColor, pixelRatio: 2 })
             .then(dataUrl => {
                 const link = document.createElement('a');
                 link.download = 'accented-text.png';
@@ -68,18 +70,36 @@ const Result = forwardRef(({words, setWords, isLoading}, ref) => {
 
     const downloadPDF = () => {
         if (resultRef.current === null || words.length === 0) return;
-        html2canvas(resultRef.current).then(canvas => {
-            const imgData = canvas.toDataURL('image/png');
-            const pdf = new jsPDF({
-                orientation: 'portrait',
-                unit: 'px',
-                format: [canvas.width, canvas.height]
+        
+        const bgColor = isDarkResult ? '#1F2937' : '#FFFFFF';
+        const element = resultRef.current;
+        const padding = 40; // Total padding (20px each side)
+        const width = element.offsetWidth + padding;
+        const height = element.offsetHeight + padding;
+
+        toPng(element, { 
+            backgroundColor: bgColor, 
+            pixelRatio: 2,
+            width: width,
+            height: height,
+            style: {
+                padding: '20px', // 20px padding around content
+                boxSizing: 'border-box'
+            }
+        })
+            .then(imgData => {
+                const orientation = width > height ? 'landscape' : 'portrait';
+                const pdf = new jsPDF({
+                    orientation: orientation,
+                    unit: 'px',
+                    format: [width, height]
+                });
+                pdf.addImage(imgData, 'PNG', 0, 0, width, height);
+                pdf.save('accented-text.pdf');
+            })
+            .catch(err => {
+                console.error('PDFの生成に失敗しました', err);
             });
-            pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
-            pdf.save('accented-text.pdf');
-        }).catch(err => {
-            console.error('PDFの生成に失敗しました', err);
-        });
     };
     
     const updateKana = (wordIndex, textIndex, newAccent) => {
@@ -232,7 +252,7 @@ const Result = forwardRef(({words, setWords, isLoading}, ref) => {
     };
 
     return (
-        <div className={`result-container-inner ${theme ? 'dark-theme' : ''} ${isEmpty ? 'tone-down' : ''}`} ref={ref}>
+        <div className={`result-container-inner ${isDarkResult ? 'dark-result' : ''} ${isEmpty ? 'tone-down' : ''}`} ref={ref}>
             {showCopyDescription && (
                 <div className="toast-notification">
                     コピーしました！
@@ -247,11 +267,11 @@ const Result = forwardRef(({words, setWords, isLoading}, ref) => {
                 <div className="result-actions">
                      <div className="action-group-left">
                         <button className='action-button' onClick={copyPlainText} title="テキスト形式でコピー">
-                            <FileText size={18} />
+                            <Copy size={18} />
                             <span>Text</span>
                         </button>
                         <button className='action-button' onClick={copyResult} title="HackMD形式でコピー (カスタムレンダリング用)">
-                            <Copy size={18} />
+                            <CodeXml size={18} />
                             <span>HackMD</span>
                         </button>
                     </div>  
@@ -268,6 +288,20 @@ const Result = forwardRef(({words, setWords, isLoading}, ref) => {
 
                         {isMenuOpen && (
                             <div className="save-menu-dropdown">
+                                <div className="theme-switch-container">
+                                    <label className="switch">
+                                        <input 
+                                            type="checkbox" 
+                                            checked={isDarkResult} 
+                                            onChange={() => setIsDarkResult(prev => !prev)} 
+                                        />
+                                        <span className="slider"></span>
+                                    </label>
+                                    <span className="theme-switch-label">
+                                        <span>ダークモードで保存</span>
+                                    </span>
+                                </div>
+                                <div className="menu-divider"></div>
                                 <button className='menu-item' onClick={() => {downloadImage(); setIsMenuOpen(false);}}>
                                     <ImageIcon size={16} />
                                     <span>画像として保存</span>
@@ -275,11 +309,6 @@ const Result = forwardRef(({words, setWords, isLoading}, ref) => {
                                 <button className='menu-item' onClick={() => {downloadPDF(); setIsMenuOpen(false);}}>
                                     <FileText size={16} />
                                     <span>PDFとして保存</span>
-                                </button>
-                                <div className="menu-divider"></div>
-                                <button className='menu-item' onClick={() => setTheme(t => !t)}>
-                                    <Palette size={16} />
-                                    <span>テーマ切り替え</span>
                                 </button>
                             </div>
                         )}

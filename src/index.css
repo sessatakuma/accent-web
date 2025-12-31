@@ -1,6 +1,3 @@
-/* Google Fonts Import */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;700&display=swap');
-
 :root {
     /* Color Palette - Clean & Chill */
     --color-bg-primary: #FAFAF9; /* Stone 50 */
@@ -30,6 +27,14 @@
     --radius-md: 0.5rem;
     --radius-lg: 1rem;
     --radius-xl: 1.5rem;
+
+    /* Dark Theme Palette (for Result Area) */
+    --color-bg-dark-panel: #1F2937; /* Gray 800 */
+    --color-bg-dark-hover: #374151; /* Gray 700 */
+    --color-text-dark-primary: #F9FAFB; /* Gray 50 */
+    --color-text-dark-secondary: #9CA3AF; /* Gray 400 */
+    --color-border-dark: #4B5563; /* Gray 600 */
+    --color-text-menu-fixed: #374151; /* Gray 700 - Fixed dark text for white menus */
 }
 
 * {
