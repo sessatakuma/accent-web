@@ -4,7 +4,6 @@ import axios from 'axios';
 import Nav from 'components/Nav.jsx';
 import Input from 'components/Input.jsx';
 import Result from 'components/Result.jsx';
-import ToTop from 'components/ToTop.jsx';
 import useDebounce from 'utilities/useDebounce';
 
 
@@ -100,8 +99,6 @@ export default function Main() {
                     </section>
                 </div>
             </main>
-
-            <ToTop />
         </div>
     );
 }
