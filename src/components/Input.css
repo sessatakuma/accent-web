@@ -55,20 +55,19 @@
     /* Position removed, handled by container */
     width: 2.5rem;
     height: 2.5rem;
+    background-color: var(--color-bg-secondary);
     border-radius: 50%;
-    background-color: var(--color-bg-primary);
     color: var(--color-text-secondary);
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 1px solid var(--color-border);
     transition: all 0.2s ease;
     cursor: pointer;
 }
 
 .generate-button:hover {
-    background-color: var(--color-accent-green-light);
-    color: var(--color-accent-green);
+    background-color: var(--color-bg-secondary-hover);
+    color: var(--color-text-primary);
     transform: rotate(15deg);
 }
 
@@ -86,7 +85,7 @@
         width: 2.5rem;
         height: 2.5rem;
         border-radius: 50%;
-        background-color: var(--color-bg-primary);
+        background-color: var(--color-bg-secondary);
         color: var(--color-text-secondary);
         border: 1px solid var(--color-border);
         transition: all 0.2s ease;
@@ -94,7 +93,7 @@
     }
 
     .paste-button:active {
-        background-color: var(--color-bg-secondary);
+        background-color: var(--color-bg-secondary-hover);
         transform: scale(0.95);
     }
 }

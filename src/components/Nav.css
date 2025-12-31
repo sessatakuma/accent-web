@@ -4,7 +4,7 @@
     display: flex;
     align-items: center;
     padding: 0 2rem;
-    background-color: var(--color-bg-secondary);
+    background-color: var(--color-accent-green);
     border-bottom: 1px solid var(--color-border);
     position: sticky;
     top: 0;
@@ -15,8 +15,7 @@
     text-decoration: none;
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    color: var(--color-text-primary);
+    gap: 0.5rem;
     transition: opacity 0.2s;
 }
 
@@ -31,8 +30,8 @@
 }
 
 .nav .title {
-    font-family: 'Outfit', sans-serif;
-    font-weight: 700;
+    font-family: 'Noto Sans', sans-serif;
+    font-weight: bold;
     font-size: 1.25rem;
-    color: var(--color-text-primary);
+    color: var(--color-text-inverted);
 }
