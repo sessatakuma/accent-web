@@ -48,11 +48,6 @@
     padding: 0;
 }
 
-.input-panel:focus-within {
-    border-color: var(--color-accent-green);
-    box-shadow: 0 0 0 3px var(--color-accent-green-light);
-}
-
 .input-panel:hover, .result-panel:hover {
     box-shadow: var(--shadow-hover);
 }
