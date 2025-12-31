@@ -1,6 +1,6 @@
 /* accent options */
 :root {
-    --accent-color: var(--color-accent);
+    --accent-color: var(--color-accent-red); /* Map to red accent from global palette */
     --accent-width: 2px;
 }
 
@@ -15,7 +15,7 @@ ruby > rt {
     padding-top: .5em !important;
 
     /* no need for rt */
-    &:is(.main ruby > rt [class*='accent']) {
+    &:is(.main-content ruby > rt [class*='accent']) {
         padding-top: 0 !important; 
     }
 

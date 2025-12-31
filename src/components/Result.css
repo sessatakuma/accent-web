@@ -108,7 +108,6 @@ ruby {
     /* Standard ruby display */
     display: inline-block; /* Fallback */
     display: ruby;
-    margin: 0 0.1em;
 }
 
 rt {
