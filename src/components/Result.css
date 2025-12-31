@@ -225,8 +225,11 @@ rt {
     bottom: 0;
     background-color: #ccc;
     transition: .4s;
-    border-radius: 34px;
+    border-radius: 32px;
+    width: 32px;
 }
+
+/* TODO: revisit to clean up css, use variables to maintain slider */
 
 .slider:before {
     position: absolute;
@@ -249,7 +252,7 @@ input:focus + .slider {
 }
 
 input:checked + .slider:before {
-    transform: translateX(16px);
+    transform: translateX(12px);
 }
 
 /* Dark theme specific adjustments for the Result Area ONLY */
