@@ -1,7 +1,7 @@
 import React, { useState, useEffect, forwardRef } from 'react';
 import { toPng } from 'html-to-image';
 import jsPDF from 'jspdf';
-import { Copy, Image as ImageIcon, FileText, ArrowDownToLine, CodeXml } from 'lucide-react';
+import { Copy, Image as ImageIcon, FileText, ArrowDownToLine, CodeXml, Moon } from 'lucide-react';
 
 import isKana from 'utilities/isKana.jsx';
 import { placeholder } from 'utilities/placeholder.jsx';
@@ -267,11 +267,9 @@ const Result = forwardRef(({words, setWords, isLoading}, ref) => {
                         )}
                         <button className='action-button' onClick={copyPlainText} title="テキスト形式でコピー">
                             <Copy size={18} />
-                            <span>Text</span>
                         </button>
                         <button className='action-button' onClick={copyResult} title="HackMD形式でコピー (カスタムレンダリング用)">
                             <CodeXml size={18} />
-                            <span>HackMD</span>
                         </button>
                     </div>  
 
@@ -282,12 +280,12 @@ const Result = forwardRef(({words, setWords, isLoading}, ref) => {
                             title="保存オプション"
                         >
                             <ArrowDownToLine size={18} />
-                            <span>保存</span>
                         </button>
 
                         {isMenuOpen && (
                             <div className="save-menu-dropdown">
                                 <div className="theme-switch-container">
+                                    <Moon size={16} className="theme-switch-label"/>
                                     <label className="switch">
                                         <input 
                                             type="checkbox" 
@@ -296,18 +294,15 @@ const Result = forwardRef(({words, setWords, isLoading}, ref) => {
                                         />
                                         <span className="slider"></span>
                                     </label>
-                                    <span className="theme-switch-label">
-                                        <span>ダークモードで保存</span>
-                                    </span>
                                 </div>
                                 <div className="menu-divider"></div>
                                 <button className='menu-item' onClick={() => {downloadImage(); setIsMenuOpen(false);}}>
                                     <ImageIcon size={16} />
-                                    <span>画像として保存</span>
+                                    <span>画像</span>
                                 </button>
                                 <button className='menu-item' onClick={() => {downloadPDF(); setIsMenuOpen(false);}}>
                                     <FileText size={16} />
-                                    <span>PDFとして保存</span>
+                                    <span>PDF</span>
                                 </button>
                             </div>
                         )}
