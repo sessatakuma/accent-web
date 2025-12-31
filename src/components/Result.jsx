@@ -141,7 +141,7 @@ const Result = forwardRef(({words, setWords, isLoading}, ref) => {
                 {words.map((word, wordIndex) => 
                     <ruby key={`${wordIndex}-${word}`}>
                         {[...word.surface].map((char, charIndex) =>
-                            word.furigana.text ? 
+                            !Array.isArray(word.accent) ? 
                                 <span key={`${wordIndex}-${charIndex}`}>{char}</span> :
                                 <Kana 
                                     key={`${wordIndex}-${charIndex}`} 
