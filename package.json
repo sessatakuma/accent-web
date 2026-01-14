@@ -16,7 +16,7 @@
         "dotenv": "^17.2.3",
         "html-to-image": "^1.11.13",
         "html2canvas": "^1.4.1",
-        "jspdf": "^3.0.3",
+        "jspdf": "^4.0.0",
         "lucide-react": "^0.562.0",
         "prop-types": "^15.8.1",
         "react": "^19.2.0",
