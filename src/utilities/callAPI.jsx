@@ -2,10 +2,14 @@ import isKana from 'utilities/isKana.jsx';
 import { splitKanaSyllables } from 'utilities/kanaUtils.jsx';
 
 export async function fetchFuriganaFromAPI(text) {
+    const apiKey = process.env.X_API_KEY;
     try {
-        const response = await fetch('https://api.mygo.page/api/MarkAccent/', {
+        const response = await fetch('https://api.sessatakuma.dev/api/MarkAccent/', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 
+                'Content-Type': 'application/json', 
+                'X-API-KEY': apiKey
+            },
             body: JSON.stringify({ text }),
         });
 
