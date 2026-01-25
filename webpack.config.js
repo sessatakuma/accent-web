@@ -1,11 +1,17 @@
-require('dotenv').config();
+import webpack from 'webpack';
+import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-const path = require('path');
+dotenv.config();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const srcPath = path.resolve(__dirname, 'src');
 const distPath = path.resolve(__dirname, 'dist');
 
-module.exports = {
+const config = {
     context: __dirname,
 
     mode: 'development',
@@ -92,3 +98,5 @@ module.exports = {
 
     devtool: 'source-map',
 };
+
+export default config;
