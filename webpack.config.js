@@ -1,9 +1,17 @@
-const path = require('path');
+import webpack from 'webpack';
+import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+dotenv.config();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const srcPath = path.resolve(__dirname, 'src');
 const distPath = path.resolve(__dirname, 'dist');
 
-module.exports = {
+const config = {
     context: __dirname,
 
     mode: 'development',
@@ -72,7 +80,11 @@ module.exports = {
             },
         },
     },
-
+    plugins: [
+        new webpack.DefinePlugin({
+            'process.env.X_API_KEY': JSON.stringify(process.env.X_API_KEY)
+        })
+    ],
     devServer: {
         static: {
             directory: distPath,
@@ -86,3 +98,5 @@ module.exports = {
 
     devtool: 'source-map',
 };
+
+export default config;

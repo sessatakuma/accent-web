@@ -13,7 +13,7 @@
     "dependencies": {
         "@types/react-transition-group": "^4.4.12",
         "axios": "^1.12.2",
-        "bootstrap": "^5.3.8",
+        "dotenv": "^17.2.3",
         "html-to-image": "^1.11.13",
         "html2canvas": "^1.4.1",
         "jspdf": "^3.0.3",

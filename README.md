@@ -15,6 +15,13 @@ npm install
 ```
 
 ## Run the app
+Setup your `.env` file with the required API key:
+```
+X_API_KEY=<our_api_key>
+```
+
+Then start the development server:
+
 ```
 npm run start
 ```
