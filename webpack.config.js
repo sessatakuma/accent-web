@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const path = require('path');
 
 const srcPath = path.resolve(__dirname, 'src');
@@ -72,7 +74,11 @@ module.exports = {
             },
         },
     },
-
+    plugins: [
+        new webpack.DefinePlugin({
+            'process.env.X_API_KEY': JSON.stringify(process.env.X_API_KEY)
+        })
+    ],
     devServer: {
         static: {
             directory: distPath,

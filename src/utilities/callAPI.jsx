@@ -3,11 +3,15 @@ import { splitKanaSyllables } from 'utilities/kanaUtils.jsx';
 import { placeholder } from 'utilities/placeholder.jsx';
 
 export async function fetchFuriganaFromAPI(text) {
+    const apiKey = process.env.X_API_KEY;
     try {
-        const response = await fetch('https://api.mygo.page/api/MarkAccent/', {
+        const response = await fetch('https://api.sessatakuma.dev/api/MarkAccent/', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ text })
+            headers: { 
+                'Content-Type': 'application/json', 
+                'X-API-KEY': apiKey
+            },
+            body: JSON.stringify({ text }),
         });
 
         const data = await response.json();
