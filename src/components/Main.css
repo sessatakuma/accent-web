@@ -17,13 +17,12 @@
     display: grid;
     grid-template-columns: 1fr;
     gap: 2rem;
-    min-height: 60vh; /* Consistent height, not too tall */
+    min-height: 60vh;
 }
 
 @media (min-width: 1024px) {
     .two-col-layout {
-        grid-template-columns: 1fr 1fr; /* Equal width columns */
-        /* Removed align-items: start to allow equal height stretching */
+        grid-template-columns: 1fr 1fr;
     }
 }
 
@@ -32,17 +31,8 @@
     border-radius: var(--radius-xl);
     border: 1px solid var(--color-border);
     transition: all 0.2s ease;
-    /* height: 100%; Removed to allow growth */
     min-height: 500px; /* Ensure visual balance */
     display: flex;
     flex-direction: column;
-}
-
-.input-panel {
-    padding: 0;
-    /* overflow: hidden; Removed to allow content to dictate size safely */
-}
-
-.result-panel {
     padding: 0;
 }

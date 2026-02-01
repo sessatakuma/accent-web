@@ -13,10 +13,6 @@
     color: var(--color-text-dark-primary);
 }
 
-/* .result-header removed */
-
-/* .result-title removed */
-
 .result-actions {
     display: flex;
     justify-content: flex-end;
@@ -71,7 +67,6 @@
 
 .result-content {
     flex: 1;
-    /* overflow-y: auto; Removed to allow panel to grow */
     position: relative;
     padding: 0;
 }
@@ -118,7 +113,6 @@ rt {
     color: var(--color-text-secondary); /* Milder color */
 }
 
-/* Legacy block removed or updated to use variables if needed - currently unused */
 .dark-theme .result-area {
      background-color: var(--color-bg-dark-panel);
      color: var(--color-text-dark-primary);
@@ -127,7 +121,7 @@ rt {
 .result-container-inner.tone-down {
     opacity: 0.7;
     filter: grayscale(0.5);
-    pointer-events: none; /* Make non-interactable */
+    pointer-events: none; 
     user-select: none;
 
 }
@@ -255,10 +249,6 @@ input:checked + .slider:before {
     transform: translateX(12px);
 }
 
-/* Dark theme specific adjustments for the Result Area ONLY */
-/* Dark theme specific adjustments removed - handled by container */
-
-/* Ensure menu items don't have dark theme styles applied from parent */
 .menu-item {
     background-color: transparent;
     border: none;

@@ -16,8 +16,6 @@
 
 .input-area {
     width: 100%;
-    /* min-height removed, will rely on flex */
-    /* flex: 1; Removed to allow JS height control */
     padding: 1.5rem;
     background-color: transparent;
     border: none;
@@ -30,11 +28,6 @@
     resize: none; 
     font-family: inherit; /* Ensure font matches */
 }
-
-.input-area:focus {
-    /* No border change on focus since we want unified look */
-}
-
 
 .input-area::placeholder {
     color: var(--color-text-secondary);
@@ -52,7 +45,6 @@
 }
 
 .generate-button {
-    /* Position removed, handled by container */
     width: 2.5rem;
     height: 2.5rem;
     background-color: var(--color-bg-secondary);
