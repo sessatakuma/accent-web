@@ -3,6 +3,7 @@
     "version": "1.0.0",
     "description": "A tool for Japanese furigana and accent marking",
     "main": "src/index.jsx",
+    "type": "module",
     "scripts": {
         "build": "webpack --mode production",
         "dev": "webpack-dev-server --mode development --open --hot"
