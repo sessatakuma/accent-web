@@ -15,7 +15,7 @@
     position: absolute;
     pointer-events: none;
     top: 15vh;
-    font-size: clamp(.8rem, .8rem + 2vw, 2rem);
+    font-size: clamp(0.8rem, 0.8rem + 2vw, 2rem);
     color: var(--color-primary);
 }
 
@@ -29,20 +29,20 @@
     height: 60vh;
     padding: 1rem;
     overflow-y: auto;
-    
+
     background-color: var(--color-primary);
     color: var(--color-secondary);
     cursor: pointer;
-    
+
     &:focus {
         cursor: text;
-        background-color: color-mix(in hsl, var(--color-primary), #000 5%);;
+        background-color: color-mix(in hsl, var(--color-primary), #000 5%);
     }
     &:empty:not(:focus)::before {
-      content: attr(data-placeholder);
-      pointer-events: none;
-      display: block;
-      opacity: .8;
+        content: attr(data-placeholder);
+        pointer-events: none;
+        display: block;
+        opacity: 0.8;
     }
 }
 
@@ -53,21 +53,31 @@
     color: var(--color-secondary);
     cursor: pointer;
     border-radius: 50%;
-    transition: scale .2s ease;
+    transition: scale 0.2s ease;
     position: absolute;
-    right: clamp(50vw - 16rem, 30vw - 5rem, 50vw - 5rem);;
+    right: clamp(50vw - 16rem, 30vw - 5rem, 50vw - 5rem);
     bottom: 0;
     font-size: 1.6rem;
     &:hover {
         scale: 1.1;
-        animation: wiggle .5s linear 1;
+        animation: wiggle 0.5s linear 1;
     }
 }
 
 @keyframes wiggle {
-    0% { transform: rotate(0deg); }
-    25% { transform: rotate(10deg); }
-    50% { transform: rotate(-10deg); }
-    75% { transform: rotate(5deg); }
-    100% { transform: rotate(0deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+    25% {
+        transform: rotate(10deg);
+    }
+    50% {
+        transform: rotate(-10deg);
+    }
+    75% {
+        transform: rotate(5deg);
+    }
+    100% {
+        transform: rotate(0deg);
+    }
 }

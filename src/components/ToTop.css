@@ -11,13 +11,13 @@
     place-items: center;
     cursor: pointer;
     box-shadow: 0 2px 4px #0001;
-    transition: all .2s ease;
+    transition: all 0.2s ease;
 
     &:hover {
         scale: 1.1;
     }
     i {
-        font-size: clamp(.5rem, .5rem + 2vh, 1.6rem);
+        font-size: clamp(0.5rem, 0.5rem + 2vh, 1.6rem);
     }
     &.hidden {
         pointer-events: none;

@@ -6,7 +6,7 @@
 
 .run-button {
     --size: 10vh;
-    --bar-width: .5rem;
+    --bar-width: 0.5rem;
 
     position: relative;
     width: var(--size);
@@ -18,12 +18,12 @@
     border-radius: 50%;
 
     cursor: pointer;
-    transition: 
-        font-size .2s ease, 
-        scale .2s ease, 
-        --progress .5s;
+    transition:
+        font-size 0.2s ease,
+        scale 0.2s ease,
+        --progress 0.5s;
     overflow: hidden;
-    
+
     display: grid;
     place-items: center;
 
@@ -44,10 +44,10 @@
 
     &.running {
         background: conic-gradient(
-        var(--color-primary) var(--progress, 0),
-        color-mix(in hsl, var(--color-accent), #000 5%) 0%
+            var(--color-primary) var(--progress, 0),
+            color-mix(in hsl, var(--color-accent), #000 5%) 0%
         );
-        cursor: wait
+        cursor: wait;
     }
 
     &.running::after {
@@ -68,15 +68,15 @@
     transition: 0s;
     &:first-child {
         transition: 0s;
-        transform: translate(-50%, -300%);    
+        transform: translate(-50%, -300%);
     }
 }
 
 .run-button:hover:not(.running) i {
-        transition: transform .2s ease;
-        transform: translate(-50%, 150%);
+    transition: transform 0.2s ease;
+    transform: translate(-50%, 150%);
     &:first-child {
-        transition: transform .2s ease .3s;
+        transition: transform 0.2s ease 0.3s;
         transform: translate(-50%, -50%);
     }
 }
