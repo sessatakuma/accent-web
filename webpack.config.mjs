@@ -1,7 +1,8 @@
-import webpack from 'webpack';
-import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
+
+import dotenv from 'dotenv';
+import webpack from 'webpack';
 
 dotenv.config();
 
@@ -43,10 +44,7 @@ const config = {
                 use: {
                     loader: 'babel-loader',
                     options: {
-                        presets: [
-                            ['@babel/preset-env', { modules: false }],
-                            '@babel/preset-react',
-                        ],
+                        presets: [['@babel/preset-env', { modules: false }], '@babel/preset-react'],
                     },
                 },
             },
@@ -82,8 +80,8 @@ const config = {
     },
     plugins: [
         new webpack.DefinePlugin({
-            'process.env.X_API_KEY': JSON.stringify(process.env.X_API_KEY)
-        })
+            'process.env.X_API_KEY': JSON.stringify(process.env.X_API_KEY),
+        }),
     ],
     devServer: {
         static: {
