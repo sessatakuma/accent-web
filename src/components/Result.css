@@ -143,6 +143,10 @@ rt {
     pointer-events: none; /* Let clicks pass through if it ever covers something, though outside flow */
 }
 
+.toast-notification.toast-warning {
+    background-color: var(--color-accent-red, #ef4444);
+}
+
 @keyframes fadeInOut {
     0% { opacity: 0; transform: translateY(-10px); }
     10% { opacity: 1; transform: translateY(0); }

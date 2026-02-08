@@ -14,6 +14,7 @@ import 'components/Result.css';
 
 const Result = forwardRef(({ words, setWords, isLoading }, ref) => {
     const [copyFeedback, setCopyFeedback] = useState(null);
+    const [feedbackType, setFeedbackType] = useState('success');
     const [isDarkResult, setIsDarkResult] = useState(false);
 
     const resultRef = React.useRef(null);
@@ -53,6 +54,7 @@ const Result = forwardRef(({ words, setWords, isLoading }, ref) => {
         navigator.clipboard
             .writeText(content)
             .then(() => {
+                setFeedbackType('success');
                 setCopyFeedback('HackMD形式でコピーしました！');
                 setTimeout(() => {
                     setCopyFeedback(null);
@@ -60,6 +62,9 @@ const Result = forwardRef(({ words, setWords, isLoading }, ref) => {
             })
             .catch(err => {
                 console.error('コピー失敗', err);
+                setFeedbackType('warning');
+                setCopyFeedback('コピーに失敗しました');
+                setTimeout(() => setCopyFeedback(null), 2000);
             });
     };
 
@@ -243,10 +248,16 @@ const Result = forwardRef(({ words, setWords, isLoading }, ref) => {
             .join('');
 
         navigator.clipboard.writeText(content).then(() => {
+            setFeedbackType('success');
             setCopyFeedback('コピーしました！');
             setTimeout(() => {
                 setCopyFeedback(null);
             }, 2000);
+        }).catch(err => {
+            console.error('コピー失敗', err);
+            setFeedbackType('warning');
+            setCopyFeedback('コピーに失敗しました');
+            setTimeout(() => setCopyFeedback(null), 2000);
         });
     };
 
@@ -262,7 +273,7 @@ const Result = forwardRef(({ words, setWords, isLoading }, ref) => {
             {!isEmpty && (
                 <div className='result-actions'>
                     <div className='action-group-left'>
-                        {copyFeedback && <div className='toast-notification'>{copyFeedback}</div>}
+                        {copyFeedback && <div className={`toast-notification toast-${feedbackType}`}>{copyFeedback}</div>}
                         <button
                             className='action-button'
                             onClick={copyPlainText}
