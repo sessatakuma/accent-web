@@ -54,7 +54,7 @@ export default function Main() {
         }
 
         setIsLoading(false);
-    }, []);
+    }, [setWords, setIsLoading]);
 
     useEffect(() => {
         handleRun(debouncedParagraph);
