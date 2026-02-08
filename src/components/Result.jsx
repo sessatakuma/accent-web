@@ -187,8 +187,9 @@ const Result = forwardRef(({ words, setWords, isLoading }, ref) => {
 
     // Close menu when clicking outside
     useEffect(() => {
+        if (!isMenuOpen) return;
         const handleClickOutside = event => {
-            if (isMenuOpen && !event.target.closest('.save-menu-container')) {
+            if (!event.target.closest('.save-menu-container')) {
                 setIsMenuOpen(false);
             }
         };
