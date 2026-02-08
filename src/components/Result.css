@@ -131,8 +131,8 @@ rt {
     bottom: 100%;
     left: 0;
     margin-bottom: 0.5rem;
-    background-color: var(--color-accent-green);
-    color: white;
+    background-color: var(--color-feedback-success);
+    color: var(--color-feedback-text);
     padding: 0.5rem 1rem;
     border-radius: var(--radius-md);
     font-size: 0.875rem;
@@ -144,7 +144,7 @@ rt {
 }
 
 .toast-notification.toast-warning {
-    background-color: var(--color-accent-red, #ef4444);
+    background-color: var(--color-feedback-warning);
 }
 
 @keyframes fadeInOut {

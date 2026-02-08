@@ -247,18 +247,21 @@ const Result = forwardRef(({ words, setWords, isLoading }, ref) => {
             })
             .join('');
 
-        navigator.clipboard.writeText(content).then(() => {
-            setFeedbackType('success');
-            setCopyFeedback('コピーしました！');
-            setTimeout(() => {
-                setCopyFeedback(null);
-            }, 2000);
-        }).catch(err => {
-            console.error('コピー失敗', err);
-            setFeedbackType('warning');
-            setCopyFeedback('コピーに失敗しました');
-            setTimeout(() => setCopyFeedback(null), 2000);
-        });
+        navigator.clipboard
+            .writeText(content)
+            .then(() => {
+                setFeedbackType('success');
+                setCopyFeedback('コピーしました！');
+                setTimeout(() => {
+                    setCopyFeedback(null);
+                }, 2000);
+            })
+            .catch(err => {
+                console.error('コピー失敗', err);
+                setFeedbackType('warning');
+                setCopyFeedback('コピーに失敗しました');
+                setTimeout(() => setCopyFeedback(null), 2000);
+            });
     };
 
     return (
@@ -273,7 +276,11 @@ const Result = forwardRef(({ words, setWords, isLoading }, ref) => {
             {!isEmpty && (
                 <div className='result-actions'>
                     <div className='action-group-left'>
-                        {copyFeedback && <div className={`toast-notification toast-${feedbackType}`}>{copyFeedback}</div>}
+                        {copyFeedback && (
+                            <div className={`toast-notification toast-${feedbackType}`}>
+                                {copyFeedback}
+                            </div>
+                        )}
                         <button
                             className='action-button'
                             onClick={copyPlainText}
