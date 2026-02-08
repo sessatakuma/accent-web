@@ -219,23 +219,6 @@ const Result = forwardRef(({ words, setWords, isLoading }, ref) => {
                     dropIndex = word.furigana.findIndex(f => f.accent === 2);
                     if (dropIndex !== -1) {
                         accentIndex = dropIndex + 1;
-                    } else {
-                        // Check for Heiban (0) or Atamadaka (1)?
-                        // If index 0 is high (1) and nothing else drops... wait, standard pitch accent:
-                        // 1 (Atamadaka): High-Low... Drop is after 1st mora. So index 0 has drop?
-                        // If accent array is [1, 0, 0...] -> This might mean High start?
-                        // Let's assume the 'accent' property values map to:
-                        // 0: Low/Middle?
-                        // 1: High start?
-                        // 2: Drop?
-
-                        // In Kana.jsx: accentName = ['none', 'flat', 'drop'] (0, 1, 2)
-                        // 1 is 'flat' (meaning High but no drop? or plateau?) -> "Kick" in heiban usually.
-                        // 2 is 'drop' (Accent Nucleus).
-
-                        // So if we find a '2', that's the nucleus.
-                        const foundDrop = word.furigana.findIndex(f => f.accent === 2);
-                        if (foundDrop !== -1) accentIndex = foundDrop + 1;
                     }
 
                     let reading = word.furigana.map(f => f.text).join('');
