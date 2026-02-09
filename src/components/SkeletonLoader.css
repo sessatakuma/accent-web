@@ -1,0 +1,23 @@
+.skeleton-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    width: 100%;
+    padding: 1rem;
+}
+
+.skeleton-line {
+    height: 1.75rem;
+    background-color: #E5E7EB; /* Gray 200 */
+    border-radius: 0.375rem;
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}

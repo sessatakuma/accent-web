@@ -1,33 +1,37 @@
 .nav {
     width: 100%;
-    padding: 0 4rem;
-    height: 7.5vh;
+    height: 4rem;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    background-color: var(--color-primary);
-    color: var(--color-secondary);
-    position: fixed;
+    padding: 0 2rem;
+    background-color: var(--color-accent-green);
+    border-bottom: 1px solid var(--color-border);
+    position: sticky;
     top: 0;
-    left: 0;
-    z-index: 1000;
-    box-shadow: 0 2px 4px #0001;
+    z-index: 100;
 }
 
 .nav .nav-title {
-    all: unset;
-    box-sizing: border-box;
-    margin-left: 4rem;
+    text-decoration: none;
     display: flex;
     align-items: center;
-    gap: .2rem;
-    cursor: pointer;
-    & .title {
-        font-weight: 800;
-        font-size: clamp(.5rem, .5rem + 2vh, 1.6rem);
-    }
-    & .logo {
-        width: 5vh;
-        height: 5vh;
-    }
+    gap: 0.5rem;
+    transition: opacity 0.2s;
+}
+
+.nav .nav-title:hover {
+    opacity: 0.8;
+}
+
+.nav .logo {
+    width: 2rem;
+    height: 2rem;
+    object-fit: contain;
+}
+
+.nav .title {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-weight: bold;
+    font-size: 1.25rem;
+    color: var(--color-text-inverted);
 }
