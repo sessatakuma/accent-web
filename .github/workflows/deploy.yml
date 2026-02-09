@@ -29,9 +29,8 @@ jobs:
           VITE_X_API_KEY: ${{ secrets.VITE_X_API_KEY }}
 
       - name: Deploy to gh-pages
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git --work-tree dist add --all
-          git commit -m "deploy: update gh-pages"
-          git push origin HEAD:gh-pages --force
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+          force_orphan: true
