@@ -18,7 +18,7 @@ const config = {
     mode: 'development',
 
     resolve: {
-        extensions: ['.js', '.jsx'],
+        extensions: ['.ts', '.tsx', '.js', '.jsx'],
         alias: {
             components: path.resolve(srcPath, 'components'),
             constants: path.resolve(srcPath, 'constants'),
@@ -28,7 +28,7 @@ const config = {
     },
 
     entry: {
-        index: './src/index.jsx',
+        index: './src/index.tsx',
     },
 
     output: {
@@ -38,6 +38,20 @@ const config = {
 
     module: {
         rules: [
+            {
+                test: /\.(ts|tsx)$/,
+                exclude: /node_modules/,
+                use: {
+                    loader: 'babel-loader',
+                    options: {
+                        presets: [
+                            ['@babel/preset-env', { modules: false }],
+                            ['@babel/preset-react', { runtime: 'automatic' }],
+                            '@babel/preset-typescript',
+                        ],
+                    },
+                },
+            },
             {
                 test: /\.(js|jsx)$/,
                 exclude: /node_modules/,

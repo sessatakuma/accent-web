@@ -4,12 +4,14 @@ import importPlugin from 'eslint-plugin-import';
 import pluginReact from 'eslint-plugin-react';
 import sortKeys from 'eslint-plugin-sort-keys';
 import globals from 'globals';
+import tseslint from 'typescript-eslint';
 
 export default defineConfig([
     pluginReact.configs.flat.recommended,
     js.configs.recommended,
+    ...tseslint.configs.recommended,
     {
-        files: ['**/*.{js,mjs,cjs,jsx}'],
+        files: ['**/*.{js,mjs,cjs,jsx,ts,tsx}'],
         languageOptions: {
             globals: {
                 ...globals.browser,
@@ -17,9 +19,17 @@ export default defineConfig([
                 webpack: 'readonly',
             },
         },
+        settings: {
+            react: {
+                version: 'detect',
+            },
+        },
+        rules: {
+            'react/react-in-jsx-scope': 'off',
+        },
     },
     {
-        files: ['**/*.{js,jsx,mjs,cjs}'],
+        files: ['**/*.{js,jsx,mjs,cjs,ts,tsx}'],
         plugins: { import: importPlugin },
         rules: {
             'import/no-duplicates': ['error', { considerQueryString: true }],
@@ -61,7 +71,7 @@ export default defineConfig([
         },
     },
     {
-        files: ['**/links.jsx'],
+        files: ['**/links.tsx'],
         plugins: { 'sort-keys': sortKeys },
         rules: {
             'sort-keys/sort-keys-fix': 'error',
