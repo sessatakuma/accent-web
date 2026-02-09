@@ -2,14 +2,28 @@ import { useState, useEffect, forwardRef, useRef, Dispatch, SetStateAction } fro
 
 import Kana from 'components/Kana';
 import SkeletonLoader from 'components/SkeletonLoader';
-import { toPng } from 'html-to-image';
-import jsPDF from 'jspdf';
 import { Copy, Image as ImageIcon, FileText, ArrowDownToLine, CodeXml, Moon } from 'lucide-react';
 import isKana from 'utilities/isKana';
 import { splitKanaSyllables } from 'utilities/kanaUtils';
 import { placeholder } from 'utilities/placeholder';
 
 import 'components/Result.css';
+
+// Lazy-loaded export modules with caching
+const preloadExportModules = (() => {
+    type ExportModules = {
+        toPng: typeof import('html-to-image').toPng;
+        jsPDF: typeof import('jspdf').default;
+    };
+    let cache: Promise<ExportModules> | null = null;
+    return () =>
+        (cache ??= Promise.all([import('html-to-image'), import('jspdf')]).then(
+            ([htmlToImage, jspdf]) => ({
+                toPng: htmlToImage.toPng,
+                jsPDF: jspdf.default,
+            }),
+        ));
+})();
 
 interface FuriganaItem {
     text: string;
@@ -89,11 +103,12 @@ const Result = forwardRef<HTMLDivElement, ResultProps>(({ words, setWords, isLoa
             });
     };
 
-    const downloadImage = (): void => {
+    const downloadImage = async (): Promise<void> => {
         if (resultRef.current === null || words.length === 0) return;
 
         const bgColor = isDarkResult ? '#1F2937' : '#FFFFFF';
 
+        const { toPng } = await preloadExportModules();
         toPng(resultRef.current, { backgroundColor: bgColor, pixelRatio: 2 })
             .then(dataUrl => {
                 const link = document.createElement('a');
@@ -106,7 +121,7 @@ const Result = forwardRef<HTMLDivElement, ResultProps>(({ words, setWords, isLoa
             });
     };
 
-    const downloadPDF = (): void => {
+    const downloadPDF = async (): Promise<void> => {
         if (resultRef.current === null || words.length === 0) return;
 
         const bgColor = isDarkResult ? '#1F2937' : '#FFFFFF';
@@ -114,6 +129,8 @@ const Result = forwardRef<HTMLDivElement, ResultProps>(({ words, setWords, isLoa
         const padding = 40; // Total padding (20px each side)
         const width = element.offsetWidth + padding;
         const height = element.offsetHeight + padding;
+
+        const { toPng, jsPDF } = await preloadExportModules();
 
         toPng(element, {
             backgroundColor: bgColor,
@@ -217,6 +234,13 @@ const Result = forwardRef<HTMLDivElement, ResultProps>(({ words, setWords, isLoa
 
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const isEmpty = !words || words.length === 0;
+
+    // Preload export modules when results are shown
+    useEffect(() => {
+        if (!isEmpty) {
+            preloadExportModules();
+        }
+    }, [isEmpty]);
 
     // Close menu when clicking outside
     useEffect(() => {
@@ -331,7 +355,7 @@ const Result = forwardRef<HTMLDivElement, ResultProps>(({ words, setWords, isLoa
                             className={`action-button save-menu-trigger ${
                                 isMenuOpen ? 'active' : ''
                             }`}
-                            onClick={() => setIsMenuOpen(!isMenuOpen)}
+                            onClick={() => setIsMenuOpen(prev => !prev)}
                             title='保存オプション'
                         >
                             <ArrowDownToLine size={18} />
