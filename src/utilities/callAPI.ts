@@ -23,14 +23,8 @@ interface ProcessedWord {
     accent: AccentEntry[];
 }
 
-declare const process: {
-    env: {
-        X_API_KEY: string;
-    };
-};
-
 export async function fetchFuriganaFromAPI(text: string): Promise<ProcessedWord[]> {
-    const apiKey = process.env.X_API_KEY;
+    const apiKey = import.meta.env.VITE_X_API_KEY;
     try {
         const response = await fetch('https://api.sessatakuma.dev/api/MarkAccent/', {
             method: 'POST',
