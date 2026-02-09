@@ -9,5 +9,8 @@
   "[css][html][json][jsonc][markdown][postcss][yaml]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.formatOnSave": true
-  }
+  },
+  "cSpell.words": [
+    "furigana"
+  ]
 }
