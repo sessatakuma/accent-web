@@ -1,12 +1,16 @@
-import React, { useRef, useEffect } from 'react';
+import { useRef, useEffect, Dispatch, SetStateAction } from 'react';
 
 import { Dices, Clipboard } from 'lucide-react';
-import PropTypes from 'prop-types';
 
 import 'components/Input.css';
 
-export default function Input({ paragraph, setParagraph }) {
-    const textareaRef = useRef(null);
+interface InputProps {
+    paragraph: string;
+    setParagraph: Dispatch<SetStateAction<string>>;
+}
+
+export default function Input({ paragraph, setParagraph }: InputProps) {
+    const textareaRef = useRef<HTMLTextAreaElement>(null);
 
     useEffect(() => {
         if (textareaRef.current) {
@@ -17,7 +21,8 @@ export default function Input({ paragraph, setParagraph }) {
             textareaRef.current.style.height = `${scrollHeight}px`;
         }
     }, [paragraph]);
-    const generateRandomParagraph = () => {
+
+    const generateRandomParagraph = (): void => {
         const examples = [
             '今日は朝から猫がベランダで日向ぼっこしていたので、つい一緒にゴロゴロしてしまった。',
             '近所のパン屋さんで新作のメロンパンを買ったら、予想以上にサクサクで感動した。',
@@ -28,7 +33,7 @@ export default function Input({ paragraph, setParagraph }) {
         setParagraph(newText);
     };
 
-    const handlePaste = async () => {
+    const handlePaste = async (): Promise<void> => {
         try {
             const text = await navigator.clipboard.readText();
             if (text) {
@@ -68,8 +73,3 @@ export default function Input({ paragraph, setParagraph }) {
         </section>
     );
 }
-
-Input.propTypes = {
-    paragraph: PropTypes.string.isRequired,
-    setParagraph: PropTypes.func.isRequired,
-};

@@ -1,7 +1,7 @@
-// utilities/kanaUtils.jsx
-export function splitKanaSyllables(kana) {
+// utilities/kanaUtils.ts
+export function splitKanaSyllables(kana: string): string[] {
     const smallKana = 'ゃゅょァィゥェォャュョヮぁぃぅぇぉっッ';
-    const result = [];
+    const result: string[] = [];
 
     for (let i = 0; i < kana.length; i++) {
         const char = kana[i];

@@ -1,7 +1,35 @@
-import isKana from 'utilities/isKana.jsx';
-import { splitKanaSyllables } from 'utilities/kanaUtils.jsx';
+import isKana from 'utilities/isKana';
+import { splitKanaSyllables } from 'utilities/kanaUtils';
 
-export async function fetchFuriganaFromAPI(text) {
+interface AccentEntry {
+    furigana: string;
+    accent_marking_type: number;
+}
+
+interface APIResultEntry {
+    surface: string;
+    furigana: string;
+    accent: AccentEntry[];
+}
+
+interface APIResponse {
+    status: number;
+    result: APIResultEntry[];
+}
+
+interface ProcessedWord {
+    surface: string;
+    furigana: string | string[];
+    accent: AccentEntry[];
+}
+
+declare const process: {
+    env: {
+        X_API_KEY: string;
+    };
+};
+
+export async function fetchFuriganaFromAPI(text: string): Promise<ProcessedWord[]> {
     const apiKey = process.env.X_API_KEY;
     try {
         const response = await fetch('https://api.sessatakuma.dev/api/MarkAccent/', {
@@ -13,14 +41,14 @@ export async function fetchFuriganaFromAPI(text) {
             body: JSON.stringify({ text }),
         });
 
-        const data = await response.json();
+        const data: APIResponse = await response.json();
 
         if (response.ok && data.status === 200 && Array.isArray(data.result)) {
             // TODO: add placeholder for foreign words
-            return data.result.map(entry => {
-                let furigana = entry.furigana;
+            return data.result.map((entry: APIResultEntry) => {
+                let furigana: string | string[] = entry.furigana;
                 if (isKana(entry.surface)) furigana = '';
-                else furigana = splitKanaSyllables(furigana);
+                else furigana = splitKanaSyllables(furigana as string);
                 return {
                     surface: entry.surface,
                     furigana,

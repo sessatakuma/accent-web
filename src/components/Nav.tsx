@@ -1,5 +1,3 @@
-import React from 'react';
-
 import 'components/Nav.css';
 
 export default function Nav() {
