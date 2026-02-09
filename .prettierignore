@@ -1,6 +1,5 @@
 .github/*
 .vscode/*
-node_modules/*
 dist/*
-
-*.css
+node_modules/*
+bun.lock
