@@ -17,7 +17,7 @@ bun i
 
 ## Set up dev server
 
-Setup your `.env` file with the required API key:
+Add a `.env` file in the root directory with our API key:
 
 ```
 VITE_X_API_KEY=<our_api_key>
