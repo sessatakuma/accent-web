@@ -1,27 +1,30 @@
 # Accent-Web
-This is a tool that aims to provide Janpanese learners a tool to add furigana and accent marks to articles.
+
+This is a tool that aims to provide Japanese learners a tool to add furigana and accent marks to articles.
 
 ## Features
-- Adds furigana and accent marks autmatically to Japanese plain text, which can also be edited manually
+
+- Adds furigana and accent marks automatically to Japanese plain text, which can also be edited manually
 - The formatted text can be copied as html format to render on HackMD with our HackMD Japanese accent marking css snippet `@OrangeSagoCream/AccentMarker`, or be downloaded as .pdf or .png file
 
-## Prerequisites
-- Node.js (v16+ recommended)
-
 ## Installation
-Install all packages with npm:
+
+Install all packages with [bun](https://bun.com/):
+
 ```bash
-npm install
+bun i
 ```
 
-## Run the app
-Setup your `.env` file with the required API key:
+## Set up dev server
+
+Add a `.env` file in the root directory with our API key:
+
 ```
-X_API_KEY=<our_api_key>
+VITE_X_API_KEY=<our_api_key>
 ```
 
 Then start the development server:
 
-```
-npm run dev
+```bash
+bun dev
 ```
