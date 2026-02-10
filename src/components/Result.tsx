@@ -1,25 +1,57 @@
-import React, { useState, useEffect, forwardRef } from 'react';
+import { useState, useEffect, forwardRef, useRef, Dispatch, SetStateAction } from 'react';
 
-import Kana from 'components/Kana.jsx';
-import SkeletonLoader from 'components/SkeletonLoader.jsx';
-import { toPng } from 'html-to-image';
-import jsPDF from 'jspdf';
+import Kana from 'components/Kana';
+import SkeletonLoader from 'components/SkeletonLoader';
 import { Copy, Image as ImageIcon, FileText, ArrowDownToLine, CodeXml, Moon } from 'lucide-react';
-import PropTypes from 'prop-types';
-import isKana from 'utilities/isKana.jsx';
-import { splitKanaSyllables } from 'utilities/kanaUtils.jsx';
-import { placeholder } from 'utilities/placeholder.jsx';
+import isKana from 'utilities/isKana';
+import { splitKanaSyllables } from 'utilities/kanaUtils';
+import { placeholder } from 'utilities/placeholder';
 
 import 'components/Result.css';
 
-const Result = forwardRef(({ words, setWords, isLoading }, ref) => {
-    const [copyFeedback, setCopyFeedback] = useState(null);
-    const [feedbackType, setFeedbackType] = useState('success');
+// Lazy-loaded export modules with caching
+const preloadExportModules = (() => {
+    type ExportModules = {
+        toPng: typeof import('html-to-image').toPng;
+        jsPDF: typeof import('jspdf').default;
+    };
+    let cache: Promise<ExportModules> | null = null;
+    return () =>
+        (cache ??= Promise.all([import('html-to-image'), import('jspdf')]).then(
+            ([htmlToImage, jspdf]) => ({
+                toPng: htmlToImage.toPng,
+                jsPDF: jspdf.default,
+            }),
+        ));
+})();
+
+interface FuriganaItem {
+    text: string;
+    accent: number;
+}
+
+interface Word {
+    surface: string;
+    furigana: FuriganaItem[];
+    accent: number | number[];
+}
+
+interface ResultProps {
+    words: Word[];
+    setWords: Dispatch<SetStateAction<Word[]>>;
+    isLoading: boolean;
+}
+
+type FeedbackType = 'success' | 'warning';
+
+const Result = forwardRef<HTMLDivElement, ResultProps>(({ words, setWords, isLoading }, ref) => {
+    const [copyFeedback, setCopyFeedback] = useState<string | null>(null);
+    const [feedbackType, setFeedbackType] = useState<FeedbackType>('success');
     const [isDarkResult, setIsDarkResult] = useState(false);
 
-    const resultRef = React.useRef(null);
+    const resultRef = useRef<HTMLParagraphElement>(null);
 
-    const copyResult = () => {
+    const copyResult = (): void => {
         if (!words || words.length === 0) return;
 
         const content = words
@@ -29,7 +61,10 @@ const Result = forwardRef(({ words, setWords, isLoading }, ref) => {
                     const furiganaArray = Array.isArray(word.furigana) ? word.furigana : [];
                     return [...surface]
                         .map((char, i) => {
-                            const accent = furiganaArray[i]?.accent ?? word.accent?.[i] ?? 0;
+                            const accent =
+                                furiganaArray[i]?.accent ??
+                                (Array.isArray(word.accent) ? word.accent[i] : 0) ??
+                                0;
                             if (accent === 1) return `<i>${char}</i>`;
                             if (accent === 2) return `<b>${char}</b>`;
                             return char;
@@ -68,11 +103,12 @@ const Result = forwardRef(({ words, setWords, isLoading }, ref) => {
             });
     };
 
-    const downloadImage = () => {
+    const downloadImage = async (): Promise<void> => {
         if (resultRef.current === null || words.length === 0) return;
 
         const bgColor = isDarkResult ? '#1F2937' : '#FFFFFF';
 
+        const { toPng } = await preloadExportModules();
         toPng(resultRef.current, { backgroundColor: bgColor, pixelRatio: 2 })
             .then(dataUrl => {
                 const link = document.createElement('a');
@@ -85,7 +121,7 @@ const Result = forwardRef(({ words, setWords, isLoading }, ref) => {
             });
     };
 
-    const downloadPDF = () => {
+    const downloadPDF = async (): Promise<void> => {
         if (resultRef.current === null || words.length === 0) return;
 
         const bgColor = isDarkResult ? '#1F2937' : '#FFFFFF';
@@ -93,6 +129,8 @@ const Result = forwardRef(({ words, setWords, isLoading }, ref) => {
         const padding = 40; // Total padding (20px each side)
         const width = element.offsetWidth + padding;
         const height = element.offsetHeight + padding;
+
+        const { toPng, jsPDF } = await preloadExportModules();
 
         toPng(element, {
             backgroundColor: bgColor,
@@ -119,14 +157,21 @@ const Result = forwardRef(({ words, setWords, isLoading }, ref) => {
             });
     };
 
-    const updateKana = (wordIndex, textIndex, newAccent) => {
-        let newWords = [...words];
-        newWords[wordIndex].accent[textIndex] = newAccent;
+    const updateKana = (wordIndex: number, textIndex: number, newAccent: number): void => {
+        const newWords = [...words];
+        if (Array.isArray(newWords[wordIndex].accent)) {
+            (newWords[wordIndex].accent as number[])[textIndex] = newAccent;
+        }
         setWords(newWords);
     };
 
-    const updateFurigana = (wordIndex, textIndex, newFurigana, newAccent) => {
-        let newWords = [...words];
+    const updateFurigana = (
+        wordIndex: number,
+        textIndex: number,
+        newFurigana: string,
+        newAccent: number,
+    ): void => {
+        const newWords = [...words];
         if (newFurigana === placeholder) {
             if (newWords[wordIndex].furigana.length === 1) {
                 newWords[wordIndex].furigana[textIndex].text = placeholder;
@@ -140,7 +185,7 @@ const Result = forwardRef(({ words, setWords, isLoading }, ref) => {
     };
 
     // Determine content to show: Skeleton, Empty State, or Data
-    let content;
+    let content: React.ReactNode;
     if (isLoading) {
         content = <SkeletonLoader lines={5} />;
     } else if (!words || words.length === 0) {
@@ -153,7 +198,7 @@ const Result = forwardRef(({ words, setWords, isLoading }, ref) => {
         content = (
             <p className='result-area' ref={resultRef}>
                 {words.map((word, wordIndex) => (
-                    <ruby key={`${wordIndex}-${word}`}>
+                    <ruby key={`${wordIndex}-${word.surface}`}>
                         {[...word.surface].map((char, charIndex) =>
                             !Array.isArray(word.accent) ? (
                                 <span key={`${wordIndex}-${charIndex}`}>{char}</span>
@@ -162,7 +207,7 @@ const Result = forwardRef(({ words, setWords, isLoading }, ref) => {
                                     key={`${wordIndex}-${charIndex}`}
                                     text={char}
                                     accent={word.accent[charIndex]}
-                                    onUpdate={(ignore, newAccent) =>
+                                    onUpdate={(_ignore, newAccent) =>
                                         updateKana(wordIndex, charIndex, newAccent)
                                     }
                                 />
@@ -190,11 +235,19 @@ const Result = forwardRef(({ words, setWords, isLoading }, ref) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const isEmpty = !words || words.length === 0;
 
+    // Preload export modules when results are shown
+    useEffect(() => {
+        if (!isEmpty) {
+            preloadExportModules();
+        }
+    }, [isEmpty]);
+
     // Close menu when clicking outside
     useEffect(() => {
         if (!isMenuOpen) return;
-        const handleClickOutside = event => {
-            if (!event.target.closest('.save-menu-container')) {
+        const handleClickOutside = (event: globalThis.MouseEvent): void => {
+            const target = event.target as HTMLElement;
+            if (!target.closest('.save-menu-container')) {
                 setIsMenuOpen(false);
             }
         };
@@ -202,7 +255,7 @@ const Result = forwardRef(({ words, setWords, isLoading }, ref) => {
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, [isMenuOpen]);
 
-    const copyPlainText = () => {
+    const copyPlainText = (): void => {
         if (!words || words.length === 0) return;
 
         const content = words
@@ -213,7 +266,7 @@ const Result = forwardRef(({ words, setWords, isLoading }, ref) => {
                 let accentIndex = 0;
                 // Check furigana or surface accent for drop (2) or kick (1) if simple pattern
                 // Note: Data structure uses 1 for 'KERNEL/KICK'? 2 for 'DROP'?
-                // In Result.jsx map: accent===1 -> <i> (High?), accent===2 -> <b> (Drop?)
+                // In Result.tsx map: accent===1 -> <i> (High?), accent===2 -> <b> (Drop?)
                 // If the goal is standard numeric notation (0 for Heiban, N for drop at Nth mora):
                 // We need to find the mora index of the drop.
                 // If array has '2' at index i, then accent nucleus is i+1?
@@ -227,7 +280,7 @@ const Result = forwardRef(({ words, setWords, isLoading }, ref) => {
                         accentIndex = dropIndex + 1;
                     }
 
-                    let reading = word.furigana.map(f => f.text).join('');
+                    const reading = word.furigana.map(f => f.text).join('');
 
                     // If surface equals reading (Kana word), output: Surface (Accent)
                     if (surface === reading) {
@@ -238,7 +291,7 @@ const Result = forwardRef(({ words, setWords, isLoading }, ref) => {
                 } else {
                     // Kana/Surface only word
                     // Check word.accent array
-                    if (word.accent) {
+                    if (Array.isArray(word.accent)) {
                         const foundDrop = word.accent.findIndex(a => a === 2);
                         if (foundDrop !== -1) accentIndex = foundDrop + 1;
                     }
@@ -302,7 +355,7 @@ const Result = forwardRef(({ words, setWords, isLoading }, ref) => {
                             className={`action-button save-menu-trigger ${
                                 isMenuOpen ? 'active' : ''
                             }`}
-                            onClick={() => setIsMenuOpen(!isMenuOpen)}
+                            onClick={() => setIsMenuOpen(prev => !prev)}
                             title='保存オプション'
                         >
                             <ArrowDownToLine size={18} />
@@ -352,11 +405,5 @@ const Result = forwardRef(({ words, setWords, isLoading }, ref) => {
 });
 
 Result.displayName = 'Result';
-
-Result.propTypes = {
-    words: PropTypes.array,
-    setWords: PropTypes.func.isRequired,
-    isLoading: PropTypes.bool,
-};
 
 export default Result;

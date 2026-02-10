@@ -2,3 +2,4 @@ node_modules/*
 .tern-project
 .DS_Store
 .env
+dist/
