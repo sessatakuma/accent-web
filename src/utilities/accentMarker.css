@@ -10,60 +10,32 @@ ruby > rt {
 }
 
 /* accent definition */
-[class*='accent'] {        
+[class*='accent'] {
     /* height matching w/ rt */
-    padding-top: .5em !important;
+    padding-top: calc(0.5em + 0.25rem) !important;
 
     /* no need for rt */
     &:is(.main-content ruby > rt [class*='accent']) {
-        padding-top: 0 !important; 
+        padding-top: calc(0em + 0.25rem) !important;
     }
 
-    border: 
-        0
-        solid 
-        var(--accent-color) !important;
-    border-top-width:  
-        var(--accent-width) !important;
-}    
-
-/* trailing drop for kana */
-.accent-drop::after {
-    /* apply invisible volume */
-    content: '';
-    display: inline-block;
-    color: transparent;
-    pointer-events: none;
-    
-    /* match the height of rt's and their borders */
-    height: 
-        calc(
-            .5em + 
-            2 * var(--accent-width)
-        );
-    
-    /* match the height of its parent */
-    translate: 
-        0 
-        calc(
-            -1em - 
-            -2 * var(--accent-width)
-        );
-    
-    border-left: 
-        solid 
-        var(--accent-color) 
-        var(--accent-width);
+    border: 0 solid var(--accent-color) !important;
+    border-top-width: var(--accent-width) !important;
 }
 
-/* trailing drop for furikana */
-rt .accent-drop {
-    border-right-width: var(--accent-width) !important;
-    
-    /* avoid redundant lines */
-    &::after {
-        display: none;
-    }
+/* trailing drop for all accent-drop marks */
+.accent-drop {
+    position: relative;
+}
+
+.accent-drop::after {
+    content: '';
+    position: absolute;
+    display: block;
+    right: 0;
+    top: 0;
+    height: 0.4rem;
+    border-left: solid var(--accent-color) var(--accent-width);
 }
 
 /* prevent trailing drop sticking to the right */
