@@ -10,13 +10,13 @@ ruby > rt {
 }
 
 /* accent definition */
-[class*='accent'] {        
+[class*='accent'] {
     /* height matching w/ rt */
-    padding-top: .5em !important;
+    padding-top: calc(0.5em + 0.25rem) !important;
 
     /* no need for rt */
     &:is(.main-content ruby > rt [class*='accent']) {
-        padding-top: 0 !important; 
+        padding-top: calc(0em + 0.25rem) !important;
     }
 
     border: 0 solid var(--accent-color) !important;
